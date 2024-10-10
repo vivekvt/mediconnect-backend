@@ -1,8 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { createClient } from '@supabase/supabase-js';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const supabase = createClient(
   process.env.SUPABASE_URL as string,
@@ -10,6 +7,12 @@ const supabase = createClient(
 );
 
 const authRouter = express.Router();
+
+// Email validation function
+const validateEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
 
 // Middleware to check JWT
 const authenticateToken = async (
@@ -36,13 +39,23 @@ const authenticateToken = async (
 authRouter.post('/signin-with-otp', async (req: Request, res: Response) => {
   const { email } = req.body;
 
+  if (!validateEmail(email)) {
+    return res.status(400).json({
+      error: 'Invalid email format',
+    });
+  }
+
   try {
-    await supabase.auth.signInWithOtp({
+    const data = await supabase.auth.signInWithOtp({
       email,
     });
 
+    if (data?.error?.code) {
+      throw new Error(data?.error?.code);
+    }
+
     res.status(201).json({
-      message: 'OTP send to email successfully',
+      message: 'OTP sent to email successfully',
       email,
     });
   } catch (error: any) {
@@ -55,6 +68,12 @@ authRouter.post('/signin-with-otp', async (req: Request, res: Response) => {
 authRouter.post('/signin-verify-otp', async (req: Request, res: Response) => {
   const { email, otp } = req.body;
 
+  if (!validateEmail(email)) {
+    return res.status(400).json({
+      error: 'Invalid email format',
+    });
+  }
+
   try {
     const data = await supabase.auth.verifyOtp({
       email,
@@ -62,9 +81,13 @@ authRouter.post('/signin-verify-otp', async (req: Request, res: Response) => {
       type: 'email',
     });
 
+    if (data?.error?.code) {
+      throw new Error(data?.error?.code);
+    }
+
     res.status(201).json({
       message: 'Sign in successful',
-      data,
+      data: data?.data,
     });
   } catch (error: any) {
     res.status(400).json({
