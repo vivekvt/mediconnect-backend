@@ -2,7 +2,7 @@
   "name": "mediconnect-backend",
   "version": "1.0.0",
   "description": "mediconnect-backend",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "build": "rimraf dist && npx tsc",
     "prestart": "npm run build",
@@ -21,12 +21,20 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
-    "morgan": "^1.10.0"
+    "express-validator": "^7.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.7.3",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "resend": "^4.0.1-alpha.0",
+    "uuid": "^11.0.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/morgan": "^1.9.4",
+    "@types/multer": "^1.4.12",
     "@types/node": "^18.15.3",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
