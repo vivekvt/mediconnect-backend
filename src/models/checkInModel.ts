@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { IAppointment } from './appointment';
+import { IAppointment } from './appointmentModel';
 
 interface ICheckIn extends Document {
   appointmentId: IAppointment['_id'];

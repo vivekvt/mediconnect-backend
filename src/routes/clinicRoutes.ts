@@ -1,4 +1,4 @@
-// routes/doctorRoutes.ts
+// routes/clinicRoutes.ts
 import express from 'express';
 import { body } from 'express-validator';
 import { validateRequest } from '../middlewares/validation';

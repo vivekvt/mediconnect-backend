@@ -7,6 +7,8 @@ import bodyParser from 'body-parser';
 import authRoutes from './routes/authRoutes';
 import clinicRoutes from './routes/clinicRoutes';
 import patientRoutes from './routes/patientRoutes';
+import scheduleRoutes from './routes/scheduleRoutes';
+import appointmentRoutes from './routes/appointmentRoutes';
 import { dbConnect } from './utils/dbConnect';
 import { uploadFile } from './controllers/fileUploadController';
 
@@ -24,6 +26,8 @@ app.post('/file-upload', uploadFile);
 app.use('/auth', authRoutes);
 app.use('/clinic', clinicRoutes);
 app.use('/patient', patientRoutes);
+app.use('/schedules', scheduleRoutes);
+app.use('/appointments', appointmentRoutes);
 
 app.get('/', (req, res) => {
   res.send('MediConnect Backend');

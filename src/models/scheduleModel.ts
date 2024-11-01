@@ -18,7 +18,6 @@ const ScheduleSchema = new Schema<ISchedule>(
     startDateTime: {
       type: Date,
       required: true,
-      index: true,
     },
     endDateTime: {
       type: Date,
