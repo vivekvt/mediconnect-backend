@@ -11,9 +11,6 @@ java.sourceCompatibility = '17'
 
 bootRun {
     environment SPRING_PROFILES_ACTIVE: environment.SPRING_PROFILES_ACTIVE ?: 'local'
-}
-
-springBoot {
     mainClass = 'com.vegs.mediconnect.MediconnectApplication'
 }
 

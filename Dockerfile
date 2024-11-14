@@ -1,7 +1,3 @@
-# using multistage docker build
-# ref: https://docs.docker.com/develop/develop-images/multistage-build/
-    
-# temp container to build using gradle
 FROM gradle:7.5-jdk17-alpine AS TEMP_BUILD_IMAGE
 ENV APP_HOME=/usr/app/
 WORKDIR $APP_HOME
@@ -19,7 +15,7 @@ RUN gradle clean build
 # actual container
 FROM openjdk:17-jdk-alpine
 ENV ARTIFACT_NAME=mediconnect-0.0.1-SNAPSHOT.jar
-ENV APP_HOME=/usr/app/
+ENV APP_HOME=/usr/app
     
 WORKDIR $APP_HOME
 COPY --from=TEMP_BUILD_IMAGE $APP_HOME/build/libs/$ARTIFACT_NAME .
