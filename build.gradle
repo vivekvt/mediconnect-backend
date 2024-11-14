@@ -11,7 +11,6 @@ java.sourceCompatibility = '17'
 
 bootRun {
     environment SPRING_PROFILES_ACTIVE: environment.SPRING_PROFILES_ACTIVE ?: 'local'
-    mainClass = 'com.vegs.mediconnect.MediconnectApplication'
 }
 
 repositories {
@@ -22,7 +21,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation('org.springframework.boot:spring-boot-starter-validation')
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
-    runtimeOnly('com.h2database:h2')
+    runtimeOnly('org.postgresql:postgresql')
     implementation('io.github.wimdeblauwe:error-handling-spring-boot-starter:4.5.0')
     implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
     implementation('nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect')
