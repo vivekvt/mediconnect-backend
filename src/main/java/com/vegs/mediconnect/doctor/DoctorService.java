@@ -84,18 +84,18 @@ public class DoctorService {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        final Schedule dSscheduleIdSchedule = scheduleRepository.findFirstBydSscheduleId(doctor);
-        if (dSscheduleIdSchedule != null) {
-            referencedWarning.setKey("doctor.schedule.dSscheduleId.referenced");
-            referencedWarning.addParam(dSscheduleIdSchedule.getId());
-            return referencedWarning;
-        }
-        final Appointment dAappointmentIdAppointment = appointmentRepository.findFirstBydAappointmentId(doctor);
-        if (dAappointmentIdAppointment != null) {
-            referencedWarning.setKey("doctor.appointment.dAappointmentId.referenced");
-            referencedWarning.addParam(dAappointmentIdAppointment.getId());
-            return referencedWarning;
-        }
+//        final Schedule dSscheduleIdSchedule = scheduleRepository.findFirstBydSscheduleId(doctor);
+//        if (dSscheduleIdSchedule != null) {
+//            referencedWarning.setKey("doctor.schedule.dSscheduleId.referenced");
+//            referencedWarning.addParam(dSscheduleIdSchedule.getId());
+//            return referencedWarning;
+//        }
+//        final Appointment dAappointmentIdAppointment = appointmentRepository.findFirstBydAappointmentId(doctor);
+//        if (dAappointmentIdAppointment != null) {
+//            referencedWarning.setKey("doctor.appointment.dAappointmentId.referenced");
+//            referencedWarning.addParam(dAappointmentIdAppointment.getId());
+//            return referencedWarning;
+//        }
         return null;
     }
 

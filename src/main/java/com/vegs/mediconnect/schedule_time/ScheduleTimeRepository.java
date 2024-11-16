@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ScheduleTimeRepository extends JpaRepository<ScheduleTime, UUID> {
 
-    ScheduleTime findFirstBysSTscheduleTimeId(Schedule schedule);
+//    ScheduleTime findFirstBysSTscheduleTimeId(Schedule schedule);
 
 }

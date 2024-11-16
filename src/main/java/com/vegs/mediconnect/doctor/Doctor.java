@@ -2,18 +2,15 @@ package com.vegs.mediconnect.doctor;
 
 import com.vegs.mediconnect.appointment.Appointment;
 import com.vegs.mediconnect.schedule.Schedule;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import java.time.OffsetDateTime;
-import java.util.Set;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.OffsetDateTime;
+import java.util.Set;
 
 
 @Entity
@@ -41,11 +38,11 @@ public class Doctor {
     @Column
     private String about;
 
-    @OneToMany(mappedBy = "dSscheduleId")
-    private Set<Schedule> dSdoctorId;
+    @OneToMany(mappedBy = "doctor")
+    private Set<Schedule> schedules;
 
-    @OneToMany(mappedBy = "dAappointmentId")
-    private Set<Appointment> dAdoctorId;
+    @OneToMany(mappedBy = "doctor")
+    private Set<Appointment> appointments;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

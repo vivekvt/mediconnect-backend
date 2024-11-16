@@ -66,8 +66,8 @@ public class AppointmentService {
         appointmentDTO.setId(appointment.getId());
         appointmentDTO.setStatus(appointment.getStatus());
         appointmentDTO.setAvailable(appointment.getAvailable());
-        appointmentDTO.setPAappointmentId(appointment.getPAappointmentId() == null ? null : appointment.getPAappointmentId().getId());
-        appointmentDTO.setDAappointmentId(appointment.getDAappointmentId() == null ? null : appointment.getDAappointmentId().getId());
+//        appointmentDTO.setPAappointmentId(appointment.getPAappointmentId() == null ? null : appointment.getPAappointmentId().getId());
+//        appointmentDTO.setDAappointmentId(appointment.getDAappointmentId() == null ? null : appointment.getDAappointmentId().getId());
         return appointmentDTO;
     }
 
@@ -77,10 +77,10 @@ public class AppointmentService {
         appointment.setAvailable(appointmentDTO.getAvailable());
         final Patient pAappointmentId = appointmentDTO.getPAappointmentId() == null ? null : patientRepository.findById(appointmentDTO.getPAappointmentId())
                 .orElseThrow(() -> new NotFoundException("pAappointmentId not found"));
-        appointment.setPAappointmentId(pAappointmentId);
+//        appointment.setPAappointmentId(pAappointmentId);
         final Doctor dAappointmentId = appointmentDTO.getDAappointmentId() == null ? null : doctorRepository.findById(appointmentDTO.getDAappointmentId())
                 .orElseThrow(() -> new NotFoundException("dAappointmentId not found"));
-        appointment.setDAappointmentId(dAappointmentId);
+//        appointment.setDAappointmentId(dAappointmentId);
         return appointment;
     }
 
@@ -88,12 +88,12 @@ public class AppointmentService {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        final Schedule sAscheduleIdSchedule = scheduleRepository.findFirstBysAscheduleId(appointment);
-        if (sAscheduleIdSchedule != null) {
-            referencedWarning.setKey("appointment.schedule.sAscheduleId.referenced");
-            referencedWarning.addParam(sAscheduleIdSchedule.getId());
-            return referencedWarning;
-        }
+//        final Schedule sAscheduleIdSchedule = scheduleRepository.findFirstBysAscheduleId(appointment);
+//        if (sAscheduleIdSchedule != null) {
+//            referencedWarning.setKey("appointment.schedule.sAscheduleId.referenced");
+//            referencedWarning.addParam(sAscheduleIdSchedule.getId());
+//            return referencedWarning;
+//        }
         return null;
     }
 

@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, UUID> {
 
-    Appointment findFirstBypAappointmentId(Patient patient);
+//    Appointment findFirstBypAappointmentId(Patient patient);
 
-    Appointment findFirstBydAappointmentId(Doctor doctor);
+//    Appointment findFirstBydAappointmentId(Doctor doctor);
 
 }

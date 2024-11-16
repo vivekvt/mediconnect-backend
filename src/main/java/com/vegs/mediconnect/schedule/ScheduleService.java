@@ -66,8 +66,8 @@ public class ScheduleService {
         scheduleDTO.setId(schedule.getId());
         scheduleDTO.setDate(schedule.getDate());
         scheduleDTO.setAvailable(schedule.getAvailable());
-        scheduleDTO.setDSscheduleId(schedule.getDSscheduleId() == null ? null : schedule.getDSscheduleId().getId());
-        scheduleDTO.setSAscheduleId(schedule.getSAscheduleId() == null ? null : schedule.getSAscheduleId().getId());
+        scheduleDTO.setDSscheduleId(schedule.getDoctor() == null ? null : schedule.getDoctor().getId());
+//        scheduleDTO.setSAscheduleId(schedule.getSAscheduleId() == null ? null : schedule.getSAscheduleId().getId());
         return scheduleDTO;
     }
 
@@ -76,27 +76,27 @@ public class ScheduleService {
         schedule.setAvailable(scheduleDTO.getAvailable());
         final Doctor dSscheduleId = scheduleDTO.getDSscheduleId() == null ? null : doctorRepository.findById(scheduleDTO.getDSscheduleId())
                 .orElseThrow(() -> new NotFoundException("dSscheduleId not found"));
-        schedule.setDSscheduleId(dSscheduleId);
+        schedule.setDoctor(dSscheduleId);
         final Appointment sAscheduleId = scheduleDTO.getSAscheduleId() == null ? null : appointmentRepository.findById(scheduleDTO.getSAscheduleId())
                 .orElseThrow(() -> new NotFoundException("sAscheduleId not found"));
-        schedule.setSAscheduleId(sAscheduleId);
+//        schedule.setSAscheduleId(sAscheduleId);
         return schedule;
     }
 
-    public boolean sAscheduleIdExists(final UUID id) {
-        return scheduleRepository.existsBysAscheduleIdId(id);
-    }
+//    public boolean sAscheduleIdExists(final UUID id) {
+//        return scheduleRepository.existsBysAscheduleIdId(id);
+//    }
 
     public ReferencedWarning getReferencedWarning(final UUID id) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        final ScheduleTime sSTscheduleTimeIdScheduleTime = scheduleTimeRepository.findFirstBysSTscheduleTimeId(schedule);
-        if (sSTscheduleTimeIdScheduleTime != null) {
-            referencedWarning.setKey("schedule.scheduleTime.sSTscheduleTimeId.referenced");
-            referencedWarning.addParam(sSTscheduleTimeIdScheduleTime.getId());
-            return referencedWarning;
-        }
+//        final ScheduleTime sSTscheduleTimeIdScheduleTime = scheduleTimeRepository.findFirstBysSTscheduleTimeId(schedule);
+//        if (sSTscheduleTimeIdScheduleTime != null) {
+//            referencedWarning.setKey("schedule.scheduleTime.sSTscheduleTimeId.referenced");
+//            referencedWarning.addParam(sSTscheduleTimeIdScheduleTime.getId());
+//            return referencedWarning;
+//        }
         return null;
     }
 

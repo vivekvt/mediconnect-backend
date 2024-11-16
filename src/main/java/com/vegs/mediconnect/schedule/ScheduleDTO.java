@@ -25,7 +25,7 @@ public class ScheduleDTO {
     private String dSscheduleId;
 
     @NotNull
-    @ScheduleSAscheduleIdUnique
+//    @ScheduleSAscheduleIdUnique
     @JsonProperty("sAscheduleId")
     private UUID sAscheduleId;
 

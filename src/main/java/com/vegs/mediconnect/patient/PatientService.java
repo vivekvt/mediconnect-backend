@@ -73,12 +73,12 @@ public class PatientService {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Patient patient = patientRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        final Appointment pAappointmentIdAppointment = appointmentRepository.findFirstBypAappointmentId(patient);
-        if (pAappointmentIdAppointment != null) {
-            referencedWarning.setKey("patient.appointment.pAappointmentId.referenced");
-            referencedWarning.addParam(pAappointmentIdAppointment.getId());
-            return referencedWarning;
-        }
+//        final Appointment pAappointmentIdAppointment = appointmentRepository.findFirstBypAappointmentId(patient);
+//        if (pAappointmentIdAppointment != null) {
+//            referencedWarning.setKey("patient.appointment.pAappointmentId.referenced");
+//            referencedWarning.addParam(pAappointmentIdAppointment.getId());
+//            return referencedWarning;
+//        }
         return null;
     }
 

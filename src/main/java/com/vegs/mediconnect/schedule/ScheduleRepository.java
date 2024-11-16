@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, UUID> {
 
-    Schedule findFirstBydSscheduleId(Doctor doctor);
-
-    Schedule findFirstBysAscheduleId(Appointment appointment);
-
-    boolean existsBysAscheduleIdId(UUID id);
+//    Schedule findFirstBydSscheduleId(Doctor doctor);
+//
+//    Schedule findFirstBysAscheduleId(Appointment appointment);
+//
+//    boolean existsBysAscheduleIdId(UUID id);
 
 }

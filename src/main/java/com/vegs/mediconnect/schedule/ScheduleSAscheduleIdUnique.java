@@ -59,7 +59,8 @@ public @interface ScheduleSAscheduleIdUnique {
                 // value hasn't changed
                 return true;
             }
-            return !scheduleService.sAscheduleIdExists(value);
+//            return !scheduleService.sAscheduleIdExists(value);
+            return true;
         }
 
     }
