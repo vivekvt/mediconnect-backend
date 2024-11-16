@@ -20,6 +20,13 @@ export const getOtp = async (req: Request, res: Response) => {
 
     // Check and create user based on role if they don't exist
     if (role === 'clinic') {
+      const patient = await PatientModel.findOne({ email });
+      if (patient?._id) {
+        return res.status(400).json({
+          message:
+            'Patient account with this email already exists, use new email to signup as clinic',
+        });
+      }
       let clinic = await ClinicModel.findOne({ email });
       if (!clinic) {
         // Generate random 4-digit clinic code
@@ -37,6 +44,13 @@ export const getOtp = async (req: Request, res: Response) => {
         });
       }
     } else {
+      const clinic = await ClinicModel.findOne({ email });
+      if (clinic?._id) {
+        return res.status(400).json({
+          message:
+            'Clinic account with this email already exists, use new email to signup as patient',
+        });
+      }
       let patient = await PatientModel.findOne({ email });
       if (!patient) {
         patient = await PatientModel.create({
