@@ -1,14 +1,14 @@
 package com.vegs.mediconnect.doctor;
 
-import com.vegs.mediconnect.appointment.Appointment;
 import com.vegs.mediconnect.appointment.AppointmentRepository;
-import com.vegs.mediconnect.schedule.Schedule;
 import com.vegs.mediconnect.schedule.ScheduleRepository;
 import com.vegs.mediconnect.util.NotFoundException;
 import com.vegs.mediconnect.util.ReferencedWarning;
-import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -33,27 +33,26 @@ public class DoctorService {
                 .toList();
     }
 
-    public DoctorDTO get(final String id) {
+    public DoctorDTO get(final UUID id) {
         return doctorRepository.findById(id)
                 .map(doctor -> mapToDTO(doctor, new DoctorDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
-    public String create(final DoctorDTO doctorDTO) {
+    public UUID create(final DoctorDTO doctorDTO) {
         final Doctor doctor = new Doctor();
         mapToEntity(doctorDTO, doctor);
-        doctor.setId(doctorDTO.getId());
         return doctorRepository.save(doctor).getId();
     }
 
-    public void update(final String id, final DoctorDTO doctorDTO) {
+    public void update(final UUID id, final DoctorDTO doctorDTO) {
         final Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
         mapToEntity(doctorDTO, doctor);
         doctorRepository.save(doctor);
     }
 
-    public void delete(final String id) {
+    public void delete(final UUID id) {
         doctorRepository.deleteById(id);
     }
 
@@ -76,11 +75,7 @@ public class DoctorService {
         return doctor;
     }
 
-    public boolean idExists(final String id) {
-        return doctorRepository.existsByIdIgnoreCase(id);
-    }
-
-    public ReferencedWarning getReferencedWarning(final String id) {
+    public ReferencedWarning getReferencedWarning(final UUID id) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(NotFoundException::new);

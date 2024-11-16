@@ -4,14 +4,14 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 
 @Getter
 @Setter
 public class DoctorDTO {
 
-    @Size(max = 255)
-    @DoctorIdValid
-    private String id;
+    private UUID id;
 
     @Size(max = 255)
     private String firstName;

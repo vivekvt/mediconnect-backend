@@ -17,21 +17,17 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead>
                         <tr>
-                            <th scope="col">[[#{schedule.id.label}]]</th>
                             <th scope="col">[[#{schedule.date.label}]]</th>
                             <th scope="col">[[#{schedule.available.label}]]</th>
-                            <th scope="col">[[#{schedule.dSscheduleId.label}]]</th>
-                            <th scope="col">[[#{schedule.sAscheduleId.label}]]</th>
+                            <th scope="col">[[#{schedule.doctorId.label}]]</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="schedule : ${schedules}">
-                            <td>[[${schedule.id}]]</td>
                             <td>[[${schedule.date}]]</td>
                             <td>[[${schedule.available}]]</td>
-                            <td>[[${schedule.dSscheduleId}]]</td>
-                            <td>[[${schedule.sAscheduleId}]]</td>
+                            <td>[[${schedule.doctorName}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
                                     <a th:href="@{/schedules/edit/{id}(id=${schedule.id})}" class="btn btn-sm btn-secondary">[[#{schedule.list.edit}]]</a>

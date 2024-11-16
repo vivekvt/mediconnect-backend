@@ -5,6 +5,8 @@ import com.vegs.mediconnect.util.ReferencedWarning;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,27 +36,27 @@ public class PatientResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PatientDTO> getPatient(@PathVariable(name = "id") final String id) {
+    public ResponseEntity<PatientDTO> getPatient(@PathVariable(name = "id") final UUID id) {
         return ResponseEntity.ok(patientService.get(id));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<String> createPatient(@RequestBody @Valid final PatientDTO patientDTO) {
-        final String createdId = patientService.create(patientDTO);
-        return new ResponseEntity<>('"' + createdId + '"', HttpStatus.CREATED);
+    public ResponseEntity<UUID> createPatient(@RequestBody @Valid final PatientDTO patientDTO) {
+        final UUID createdId = patientService.create(patientDTO);
+        return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updatePatient(@PathVariable(name = "id") final String id,
+    public ResponseEntity<UUID> updatePatient(@PathVariable(name = "id") final UUID id,
             @RequestBody @Valid final PatientDTO patientDTO) {
         patientService.update(id, patientDTO);
-        return ResponseEntity.ok('"' + id + '"');
+        return ResponseEntity.ok(id);
     }
 
     @DeleteMapping("/{id}")
     @ApiResponse(responseCode = "204")
-    public ResponseEntity<Void> deletePatient(@PathVariable(name = "id") final String id) {
+    public ResponseEntity<Void> deletePatient(@PathVariable(name = "id") final UUID id) {
         final ReferencedWarning referencedWarning = patientService.getReferencedWarning(id);
         if (referencedWarning != null) {
             throw new ReferencedException(referencedWarning);

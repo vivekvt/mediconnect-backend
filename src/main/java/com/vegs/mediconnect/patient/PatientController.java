@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.UUID;
+
 
 @Controller
 @RequestMapping("/patients")
@@ -47,13 +49,13 @@ public class PatientController {
     }
 
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable(name = "id") final String id, final Model model) {
+    public String edit(@PathVariable(name = "id") final UUID id, final Model model) {
         model.addAttribute("patient", patientService.get(id));
         return "patient/edit";
     }
 
     @PostMapping("/edit/{id}")
-    public String edit(@PathVariable(name = "id") final String id,
+    public String edit(@PathVariable(name = "id") final UUID id,
             @ModelAttribute("patient") @Valid final PatientDTO patientDTO,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -65,7 +67,7 @@ public class PatientController {
     }
 
     @PostMapping("/delete/{id}")
-    public String delete(@PathVariable(name = "id") final String id,
+    public String delete(@PathVariable(name = "id") final UUID id,
             final RedirectAttributes redirectAttributes) {
         final ReferencedWarning referencedWarning = patientService.getReferencedWarning(id);
         if (referencedWarning != null) {

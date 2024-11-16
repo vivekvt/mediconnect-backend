@@ -64,8 +64,8 @@ public class ScheduleTimeService {
             final ScheduleTime scheduleTime) {
         scheduleTime.setTime(scheduleTimeDTO.getTime());
         scheduleTime.setAvailable(scheduleTimeDTO.getAvailable());
-        final Schedule sSTscheduleTimeId = scheduleTimeDTO.getSSTscheduleTimeId() == null ? null : scheduleRepository.findById(scheduleTimeDTO.getSSTscheduleTimeId())
-                .orElseThrow(() -> new NotFoundException("sSTscheduleTimeId not found"));
+//        final Schedule sSTscheduleTimeId = scheduleTimeDTO.getSSTscheduleTimeId() == null ? null : scheduleRepository.findById(scheduleTimeDTO.getSSTscheduleTimeId())
+//                .orElseThrow(() -> new NotFoundException("sSTscheduleTimeId not found"));
 //        scheduleTime.setSSTscheduleTimeId(sSTscheduleTimeId);
         return scheduleTime;
     }

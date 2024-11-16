@@ -5,6 +5,8 @@ import com.vegs.mediconnect.appointment.AppointmentRepository;
 import com.vegs.mediconnect.util.NotFoundException;
 import com.vegs.mediconnect.util.ReferencedWarning;
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -28,27 +30,26 @@ public class PatientService {
                 .toList();
     }
 
-    public PatientDTO get(final String id) {
+    public PatientDTO get(final UUID id) {
         return patientRepository.findById(id)
                 .map(patient -> mapToDTO(patient, new PatientDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
-    public String create(final PatientDTO patientDTO) {
+    public UUID create(final PatientDTO patientDTO) {
         final Patient patient = new Patient();
         mapToEntity(patientDTO, patient);
-        patient.setId(patientDTO.getId());
         return patientRepository.save(patient).getId();
     }
 
-    public void update(final String id, final PatientDTO patientDTO) {
+    public void update(final UUID id, final PatientDTO patientDTO) {
         final Patient patient = patientRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
         mapToEntity(patientDTO, patient);
         patientRepository.save(patient);
     }
 
-    public void delete(final String id) {
+    public void delete(final UUID id) {
         patientRepository.deleteById(id);
     }
 
@@ -65,11 +66,7 @@ public class PatientService {
         return patient;
     }
 
-    public boolean idExists(final String id) {
-        return patientRepository.existsByIdIgnoreCase(id);
-    }
-
-    public ReferencedWarning getReferencedWarning(final String id) {
+    public ReferencedWarning getReferencedWarning(final UUID id) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Patient patient = patientRepository.findById(id)
                 .orElseThrow(NotFoundException::new);

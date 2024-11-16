@@ -4,12 +4,14 @@ import com.vegs.mediconnect.appointment.Appointment;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.UUID;
 
 
 @Entity
@@ -20,7 +22,9 @@ public class Patient {
 
     @Id
     @Column(nullable = false, updatable = false)
-    private String id;
+    @GeneratedValue
+    @UuidGenerator
+    private UUID id;
 
     @Column
     private String firstName;

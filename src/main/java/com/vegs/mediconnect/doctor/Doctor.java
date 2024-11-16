@@ -5,12 +5,16 @@ import com.vegs.mediconnect.schedule.Schedule;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.OffsetDateTime;
 import java.util.Set;
+import java.util.UUID;
+
+import static java.util.Objects.isNull;
 
 
 @Entity
@@ -21,7 +25,9 @@ public class Doctor {
 
     @Id
     @Column(nullable = false, updatable = false)
-    private String id;
+    @GeneratedValue
+    @UuidGenerator
+    private UUID id;
 
     @Column
     private String firstName;
@@ -51,5 +57,17 @@ public class Doctor {
     @LastModifiedDate
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
+
+    public String getFullName() {
+        if (isNull(lastName)) {
+            return firstName;
+        }
+        if (isNull(firstName)) {
+            return lastName;
+        }
+        return lastName
+                .concat(" ")
+                .concat(firstName);
+    }
 
 }

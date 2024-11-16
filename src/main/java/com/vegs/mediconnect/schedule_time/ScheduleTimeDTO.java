@@ -20,7 +20,6 @@ public class ScheduleTimeDTO {
     private Boolean available;
 
     @NotNull
-    @JsonProperty("sSTscheduleTimeId")
-    private UUID sSTscheduleTimeId;
+    private UUID scheduleId;
 
 }

@@ -20,13 +20,12 @@ public class AppointmentDTO {
     private Boolean available;
 
     @NotNull
-    @Size(max = 255)
-    @JsonProperty("pAappointmentId")
-    private String pAappointmentId;
+    private UUID patientId;
 
     @NotNull
-    @Size(max = 255)
-    @JsonProperty("dAappointmentId")
-    private String dAappointmentId;
+    private UUID doctorId;
+
+    @NotNull
+    private UUID scheduleId;
 
 }

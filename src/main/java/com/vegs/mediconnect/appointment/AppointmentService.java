@@ -1,17 +1,15 @@
 package com.vegs.mediconnect.appointment;
 
-import com.vegs.mediconnect.doctor.Doctor;
 import com.vegs.mediconnect.doctor.DoctorRepository;
-import com.vegs.mediconnect.patient.Patient;
 import com.vegs.mediconnect.patient.PatientRepository;
-import com.vegs.mediconnect.schedule.Schedule;
 import com.vegs.mediconnect.schedule.ScheduleRepository;
 import com.vegs.mediconnect.util.NotFoundException;
 import com.vegs.mediconnect.util.ReferencedWarning;
-import java.util.List;
-import java.util.UUID;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -75,12 +73,12 @@ public class AppointmentService {
             final Appointment appointment) {
         appointment.setStatus(appointmentDTO.getStatus());
         appointment.setAvailable(appointmentDTO.getAvailable());
-        final Patient pAappointmentId = appointmentDTO.getPAappointmentId() == null ? null : patientRepository.findById(appointmentDTO.getPAappointmentId())
-                .orElseThrow(() -> new NotFoundException("pAappointmentId not found"));
-//        appointment.setPAappointmentId(pAappointmentId);
-        final Doctor dAappointmentId = appointmentDTO.getDAappointmentId() == null ? null : doctorRepository.findById(appointmentDTO.getDAappointmentId())
-                .orElseThrow(() -> new NotFoundException("dAappointmentId not found"));
-//        appointment.setDAappointmentId(dAappointmentId);
+//        final Patient pAappointmentId = appointmentDTO.getPAappointmentId() == null ? null : patientRepository.findById(appointmentDTO.getPAappointmentId())
+//                .orElseThrow(() -> new NotFoundException("pAappointmentId not found"));
+////        appointment.setPAappointmentId(pAappointmentId);
+//        final Doctor dAappointmentId = appointmentDTO.getDAappointmentId() == null ? null : doctorRepository.findById(appointmentDTO.getDAappointmentId())
+//                .orElseThrow(() -> new NotFoundException("dAappointmentId not found"));
+////        appointment.setDAappointmentId(dAappointmentId);
         return appointment;
     }
 
