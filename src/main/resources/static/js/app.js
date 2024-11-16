@@ -2,15 +2,15 @@ function initDatepicker() {
   document.querySelectorAll('.js-datepicker, .js-timepicker, .js-datetimepicker').forEach(($item) => {
     const flatpickrConfig = {
       allowInput: true,
-      time_24hr: true,
-      enableSeconds: true
+      time_24hr: false,
+      enableSeconds: false
     };
     if ($item.classList.contains('js-datepicker')) {
       flatpickrConfig.dateFormat = 'Y-m-d';
     } else if ($item.classList.contains('js-timepicker')) {
       flatpickrConfig.enableTime = true;
       flatpickrConfig.noCalendar = true;
-      flatpickrConfig.dateFormat = 'H:i:S';
+      flatpickrConfig.dateFormat = 'H:i K';
     } else { // datetimepicker
       flatpickrConfig.enableTime = true;
       flatpickrConfig.altInput = true;

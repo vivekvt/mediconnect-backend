@@ -4,6 +4,7 @@ import com.vegs.mediconnect.schedule.Schedule;
 import com.vegs.mediconnect.schedule.ScheduleRepository;
 import com.vegs.mediconnect.util.CustomCollectors;
 import com.vegs.mediconnect.util.WebUtils;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import org.springframework.data.domain.Sort;
@@ -31,11 +32,12 @@ public class ScheduleTimeController {
         this.scheduleRepository = scheduleRepository;
     }
 
+    @Transactional
     @ModelAttribute
     public void prepareContext(final Model model) {
-        model.addAttribute("sSTscheduleTimeIdValues", scheduleRepository.findAll(Sort.by("id"))
+        model.addAttribute("scheduleIdValues", scheduleRepository.findAll()
                 .stream()
-                .collect(CustomCollectors.toSortedMap(Schedule::getId, Schedule::getId)));
+                .collect(CustomCollectors.toSortedMap(Schedule::getId, Schedule::getScheduleDoctor )));
     }
 
     @GetMapping

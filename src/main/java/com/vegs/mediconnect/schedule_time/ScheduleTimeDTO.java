@@ -1,11 +1,13 @@
 package com.vegs.mediconnect.schedule_time;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.UUID;
 
 
 @Getter
@@ -14,12 +16,18 @@ public class ScheduleTimeDTO {
 
     private UUID id;
 
-    @Size(max = 255)
-    private String time;
+    @NotNull
+    @DateTimeFormat(pattern = "HH:mm a")
+    private LocalTime time;
 
+    @NotNull
     private Boolean available;
 
     @NotNull
     private UUID scheduleId;
+
+    private LocalDate scheduleDate;
+
+    private String doctorName;
 
 }

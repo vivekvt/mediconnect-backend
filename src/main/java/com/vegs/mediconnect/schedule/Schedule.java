@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,5 +49,13 @@ public class Schedule {
     @LastModifiedDate
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
+
+    public String getDoctorName() {
+        return doctor.getFullName();
+    }
+
+    public String getScheduleDoctor() {
+        return getDoctorName().concat(" ").concat(getDate().format(DateTimeFormatter.ofPattern("LLLL dd yyyy")));
+    }
 
 }

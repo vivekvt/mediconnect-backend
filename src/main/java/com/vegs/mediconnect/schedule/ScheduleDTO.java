@@ -1,7 +1,6 @@
 package com.vegs.mediconnect.schedule;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,8 +14,10 @@ public class ScheduleDTO {
 
     private UUID id;
 
+    @NotNull
     private LocalDate date;
 
+    @NotNull
     private Boolean available;
 
     @NotNull

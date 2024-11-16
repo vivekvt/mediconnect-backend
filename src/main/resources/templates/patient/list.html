@@ -17,7 +17,6 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead>
                         <tr>
-                            <th scope="col">[[#{patient.id.label}]]</th>
                             <th scope="col">[[#{patient.firstName.label}]]</th>
                             <th scope="col">[[#{patient.lastName.label}]]</th>
                             <th><!-- --></th>
@@ -25,7 +24,6 @@
                     </thead>
                     <tbody>
                         <tr th:each="patient : ${patients}">
-                            <td>[[${patient.id}]]</td>
                             <td>[[${patient.firstName}]]</td>
                             <td>[[${patient.lastName}]]</td>
                             <td>
