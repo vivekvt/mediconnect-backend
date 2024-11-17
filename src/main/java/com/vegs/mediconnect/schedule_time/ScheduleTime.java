@@ -9,7 +9,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -17,6 +16,7 @@ import java.util.UUID;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@Table(uniqueConstraints = { @UniqueConstraint(name = "UC_SCHEDULE_DATE", columnNames = { "time", "schedule_id" }) })
 @Getter
 @Setter
 public class ScheduleTime {
@@ -30,10 +30,7 @@ public class ScheduleTime {
     @Column(nullable = false)
     private LocalTime time;
 
-    @Column
-    private Boolean available;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "schedule_id", nullable = false)
     private Schedule schedule;
 

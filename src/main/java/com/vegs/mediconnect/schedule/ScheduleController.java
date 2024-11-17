@@ -6,13 +6,16 @@ import com.vegs.mediconnect.util.CustomCollectors;
 import com.vegs.mediconnect.util.ReferencedWarning;
 import com.vegs.mediconnect.util.WebUtils;
 import jakarta.validation.Valid;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -31,7 +34,7 @@ public class ScheduleController {
 
     @ModelAttribute
     public void prepareContext(final Model model) {
-        var allDoctors = doctorRepository.findAll(Sort.by("id"));
+        var allDoctors = doctorRepository.findAll(Sort.by("lastName", "firstName"));
         model.addAttribute("doctors", allDoctors);
         model.addAttribute("doctorIdValues", allDoctors
                 .stream()
@@ -53,11 +56,21 @@ public class ScheduleController {
     public String add(@ModelAttribute("schedule") @Valid final ScheduleDTO scheduleDTO,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
+            checkUniqueConstraint(bindingResult);
             return "schedule/add";
         }
         scheduleService.create(scheduleDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("schedule.create.success"));
         return "redirect:/schedules";
+    }
+
+    private static void checkUniqueConstraint(BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors("doctorDate")) {
+            bindingResult.addError(new FieldError("schedule", "date",
+                    Optional.ofNullable(bindingResult.getFieldError("doctorDate"))
+                            .map(FieldError::getDefaultMessage)
+                            .orElse("Error")));
+        }
     }
 
     @GetMapping("/edit/{id}")
@@ -71,6 +84,7 @@ public class ScheduleController {
             @ModelAttribute("schedule") @Valid final ScheduleDTO scheduleDTO,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
+            checkUniqueConstraint(bindingResult);
             return "schedule/edit";
         }
         scheduleService.update(id, scheduleDTO);

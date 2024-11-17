@@ -27,7 +27,8 @@ public class DoctorService {
     }
 
     public List<DoctorDTO> findAll() {
-        final List<Doctor> doctors = doctorRepository.findAll(Sort.by("id"));
+        final List<Doctor> doctors = doctorRepository
+                .findAll(Sort.by("lastName", "firstName"));
         return doctors.stream()
                 .map(doctor -> mapToDTO(doctor, new DoctorDTO()))
                 .toList();

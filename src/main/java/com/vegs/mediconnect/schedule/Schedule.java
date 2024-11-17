@@ -19,6 +19,7 @@ import java.util.UUID;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@Table(uniqueConstraints = { @UniqueConstraint(name = "UC_DOCTOR_DATE", columnNames = { "date", "doctor_id" }) })
 @Getter
 @Setter
 public class Schedule {
@@ -29,13 +30,10 @@ public class Schedule {
     @UuidGenerator
     private UUID id;
 
-    @Column
+    @Column(nullable = false)
     private LocalDate date;
 
-    @Column
-    private Boolean available;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
 

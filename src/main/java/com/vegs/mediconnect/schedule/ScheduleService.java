@@ -1,6 +1,5 @@
 package com.vegs.mediconnect.schedule;
 
-import com.vegs.mediconnect.doctor.Doctor;
 import com.vegs.mediconnect.doctor.DoctorRepository;
 import com.vegs.mediconnect.util.NotFoundException;
 import com.vegs.mediconnect.util.ReferencedWarning;
@@ -26,7 +25,8 @@ public class ScheduleService {
 
     @Transactional
     public List<ScheduleDTO> findAll() {
-        final List<Schedule> schedules = scheduleRepository.findAll(Sort.by("id"));
+        final List<Schedule> schedules = scheduleRepository.findAll(Sort.by(
+                "doctor.lastName", "doctor.firstName", "date"));
         return schedules.stream()
                 .map(schedule -> mapToDTO(schedule, new ScheduleDTO()))
                 .toList();
@@ -56,20 +56,21 @@ public class ScheduleService {
         scheduleRepository.deleteById(id);
     }
 
+    public boolean isDoctorDateExists(DoctorDateDTO doctorDateDTO) {
+        return scheduleRepository.findByDoctorIdAndDate(doctorDateDTO.getDoctorId(), doctorDateDTO.getDate()).isPresent();
+    }
+
     private ScheduleDTO mapToDTO(final Schedule schedule, final ScheduleDTO scheduleDTO) {
         scheduleDTO.setId(schedule.getId());
         scheduleDTO.setDate(schedule.getDate());
-        scheduleDTO.setAvailable(schedule.getAvailable());
         scheduleDTO.setDoctorId(schedule.getDoctor().getId());
         scheduleDTO.setDoctorName(schedule.getDoctor().getFullName());
         return scheduleDTO;
     }
 
-    private Schedule mapToEntity(final ScheduleDTO scheduleDTO, final Schedule schedule) {
+    private void mapToEntity(final ScheduleDTO scheduleDTO, final Schedule schedule) {
         schedule.setDate(scheduleDTO.getDate());
-        schedule.setAvailable(scheduleDTO.getAvailable());
         schedule.setDoctor(doctorRepository.getReferenceById(scheduleDTO.getDoctorId()));
-        return schedule;
     }
 
     public ReferencedWarning getReferencedWarning(final UUID id) {

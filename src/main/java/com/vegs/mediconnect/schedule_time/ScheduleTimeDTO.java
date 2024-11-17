@@ -21,13 +21,15 @@ public class ScheduleTimeDTO {
     private LocalTime time;
 
     @NotNull
-    private Boolean available;
-
-    @NotNull
     private UUID scheduleId;
 
     private LocalDate scheduleDate;
 
     private String doctorName;
+
+    @ScheduleDateTimeUnique
+    public ScheduleDateTimeDTO getScheduleDateTime() {
+        return new ScheduleDateTimeDTO(time, scheduleId);
+    }
 
 }

@@ -16,7 +16,6 @@
             <div th:replace="~{fragments/forms::globalErrors('schedule')}" />
             <form th:action="${requestUri}" method="post">
                 <div th:replace="~{fragments/forms::inputRow(object='schedule', field='date', inputClass='js-datepicker', required=true)}" />
-                <div th:replace="~{fragments/forms::inputRow(object='schedule', field='available', type='checkbox')}" />
 <!--                <div>-->
 <!--                    <label for="doctorNameFilter">Filter by Doctor Name:</label>-->
 <!--                    <input type="text" id="doctorNameFilter" placeholder="Type a doctor's name" onkeyup="filterDoctorOptions()">-->

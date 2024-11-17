@@ -17,15 +17,15 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead>
                         <tr>
-                            <th scope="col">[[#{scheduleTime.scheduleDate.label}]]</th>
                             <th scope="col">[[#{scheduleTime.doctorName.label}]]</th>
+                            <th scope="col">[[#{scheduleTime.scheduleDate.label}]]</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="scheduleTime : ${scheduleTimes}">
-                            <td>[[${scheduleTime.scheduleDate}]] [[${scheduleTime.time}]]</td>
                             <td>[[${scheduleTime.doctorName}]]</td>
+                            <td>[[${scheduleTime.scheduleDate}]] [[${scheduleTime.time}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
                                     <a th:href="@{/scheduleTimes/edit/{id}(id=${scheduleTime.id})}" class="btn btn-sm btn-secondary">[[#{scheduleTime.list.edit}]]</a>

@@ -6,17 +6,16 @@ import com.vegs.mediconnect.util.CustomCollectors;
 import com.vegs.mediconnect.util.WebUtils;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import java.util.UUID;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Optional;
+import java.util.UUID;
 
 
 @Controller
@@ -35,7 +34,8 @@ public class ScheduleTimeController {
     @Transactional
     @ModelAttribute
     public void prepareContext(final Model model) {
-        model.addAttribute("scheduleIdValues", scheduleRepository.findAll()
+        model.addAttribute("scheduleIdValues", scheduleRepository.findAll(
+                Sort.by("doctor.lastName", "doctor.firstName", "date"))
                 .stream()
                 .collect(CustomCollectors.toSortedMap(Schedule::getId, Schedule::getScheduleDoctor )));
     }
@@ -55,6 +55,7 @@ public class ScheduleTimeController {
     public String add(@ModelAttribute("scheduleTime") @Valid final ScheduleTimeDTO scheduleTimeDTO,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
+            checkUniqueConstraint(bindingResult);
             return "scheduleTime/add";
         }
         scheduleTimeService.create(scheduleTimeDTO);
@@ -73,6 +74,7 @@ public class ScheduleTimeController {
             @ModelAttribute("scheduleTime") @Valid final ScheduleTimeDTO scheduleTimeDTO,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
+            checkUniqueConstraint(bindingResult);
             return "scheduleTime/edit";
         }
         scheduleTimeService.update(id, scheduleTimeDTO);
@@ -86,6 +88,15 @@ public class ScheduleTimeController {
         scheduleTimeService.delete(id);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("scheduleTime.delete.success"));
         return "redirect:/scheduleTimes";
+    }
+
+    private static void checkUniqueConstraint(BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors("scheduleDateTime")) {
+            bindingResult.addError(new FieldError("scheduleTime", "time",
+                    Optional.ofNullable(bindingResult.getFieldError("scheduleDateTime"))
+                            .map(FieldError::getDefaultMessage)
+                            .orElse("Error")));
+        }
     }
 
 }

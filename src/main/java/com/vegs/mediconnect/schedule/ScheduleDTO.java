@@ -18,11 +18,12 @@ public class ScheduleDTO {
     private LocalDate date;
 
     @NotNull
-    private Boolean available;
-
-    @NotNull
     private UUID doctorId;
 
     private String doctorName;
 
+    @ScheduleDoctorDateUnique
+    public DoctorDateDTO getDoctorDate() {
+        return new DoctorDateDTO(date, doctorId);
+    }
 }

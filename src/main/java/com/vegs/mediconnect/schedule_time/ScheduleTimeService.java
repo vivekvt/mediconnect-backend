@@ -24,7 +24,12 @@ public class ScheduleTimeService {
 
     @Transactional
     public List<ScheduleTimeDTO> findAll() {
-        final List<ScheduleTime> scheduleTimes = scheduleTimeRepository.findAll(Sort.by("id"));
+        final List<ScheduleTime> scheduleTimes = scheduleTimeRepository
+                .findAll(Sort.by(
+                        "schedule.doctor.lastName",
+                        "schedule.doctor.firstName",
+                        "schedule.date",
+                        "time"));
         return scheduleTimes.stream()
                 .map(scheduleTime -> mapToDTO(scheduleTime, new ScheduleTimeDTO()))
                 .toList();
@@ -58,7 +63,6 @@ public class ScheduleTimeService {
             final ScheduleTimeDTO scheduleTimeDTO) {
         scheduleTimeDTO.setId(scheduleTime.getId());
         scheduleTimeDTO.setTime(scheduleTime.getTime());
-        scheduleTimeDTO.setAvailable(scheduleTime.getAvailable());
         scheduleTimeDTO.setScheduleDate(scheduleTime.getSchedule().getDate());
         scheduleTimeDTO.setDoctorName(scheduleTime.getSchedule().getDoctorName());
         return scheduleTimeDTO;
@@ -67,8 +71,12 @@ public class ScheduleTimeService {
     private void mapToEntity(final ScheduleTimeDTO scheduleTimeDTO,
             final ScheduleTime scheduleTime) {
         scheduleTime.setTime(scheduleTimeDTO.getTime());
-        scheduleTime.setAvailable(scheduleTimeDTO.getAvailable());
         scheduleTime.setSchedule(scheduleRepository.getReferenceById(scheduleTimeDTO.getScheduleId()));
     }
 
+    public boolean isScheduleDateTimeExist(ScheduleDateTimeDTO dateTimeDTO) {
+        return scheduleTimeRepository
+                .findByTimeAndScheduleId(dateTimeDTO.getTime(), dateTimeDTO.getScheduleId())
+                .isPresent();
+    }
 }
