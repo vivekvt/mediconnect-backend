@@ -1,14 +1,13 @@
 package com.vegs.mediconnect.patient;
 
-import com.vegs.mediconnect.appointment.Appointment;
 import com.vegs.mediconnect.appointment.AppointmentRepository;
 import com.vegs.mediconnect.util.NotFoundException;
 import com.vegs.mediconnect.util.ReferencedWarning;
-import java.util.List;
-import java.util.UUID;
-
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 
 @Service
