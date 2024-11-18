@@ -66,7 +66,7 @@ public class Doctor {
             return lastName;
         }
         return lastName
-                .concat(" ")
+                .concat(", ")
                 .concat(firstName);
     }
 
