@@ -27,6 +27,12 @@ public class ScheduleTimeDTO {
 
     private String doctorName;
 
+    public ScheduleTimeDTO() {}
+
+    public ScheduleTimeDTO(LocalTime localTime) {
+        this.time = localTime;
+    }
+
     @ScheduleDateTimeUnique
     public ScheduleDateTimeDTO getScheduleDateTime() {
         return new ScheduleDateTimeDTO(time, scheduleId);

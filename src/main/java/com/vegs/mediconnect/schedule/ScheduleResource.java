@@ -36,7 +36,7 @@ public class ScheduleResource {
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<UUID> createSchedule(@RequestBody @Valid final ScheduleDTO scheduleDTO) {
-        final UUID createdId = scheduleService.create(scheduleDTO);
+        final UUID createdId = scheduleService.create(scheduleDTO).getId();
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
 

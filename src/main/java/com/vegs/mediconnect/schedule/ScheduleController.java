@@ -2,6 +2,8 @@ package com.vegs.mediconnect.schedule;
 
 import com.vegs.mediconnect.doctor.Doctor;
 import com.vegs.mediconnect.doctor.DoctorRepository;
+import com.vegs.mediconnect.schedule_time.ScheduleTimeDTO;
+import com.vegs.mediconnect.schedule_time.ScheduleTimeService;
 import com.vegs.mediconnect.util.CustomCollectors;
 import com.vegs.mediconnect.util.ReferencedWarning;
 import com.vegs.mediconnect.util.WebUtils;
@@ -14,6 +16,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,21 +27,39 @@ import java.util.UUID;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+    private final ScheduleTimeService scheduleTimeService;
     private final DoctorRepository doctorRepository;
 
-    public ScheduleController(final ScheduleService scheduleService,
-            final DoctorRepository doctorRepository) {
+    public ScheduleController(final ScheduleService scheduleService, ScheduleTimeService scheduleTimeService,
+                              final DoctorRepository doctorRepository) {
         this.scheduleService = scheduleService;
+        this.scheduleTimeService = scheduleTimeService;
         this.doctorRepository = doctorRepository;
     }
 
     @ModelAttribute
     public void prepareContext(final Model model) {
         var allDoctors = doctorRepository.findAll(Sort.by("lastName", "firstName"));
-        model.addAttribute("doctors", allDoctors);
+
+        List<String> times = createAllTimes();
+        model.addAttribute("optionTimes", times);
         model.addAttribute("doctorIdValues", allDoctors
                 .stream()
                 .collect(CustomCollectors.toSortedMap(Doctor::getId, Doctor::getFullName)));
+    }
+
+    private static List<String> createAllTimes() {
+        List<String> times = new ArrayList<>();
+        times.add("9 AM");
+        times.add("10 AM");
+        times.add("11 AM");
+        times.add("12 PM");
+        times.add("1 PM");
+        times.add("2 PM");
+        times.add("3 PM");
+        times.add("4 PM");
+        times.add("5 PM");
+        return times;
     }
 
     @GetMapping
@@ -58,7 +80,15 @@ public class ScheduleController {
             checkUniqueConstraint(bindingResult);
             return "schedule/add";
         }
-        scheduleService.create(scheduleDTO);
+        var schedule = scheduleService.create(scheduleDTO);
+        scheduleDTO
+                .getTimes()
+                .stream()
+                .map(ScheduleTimeDTO::new)
+                .forEach(scheduleTimeDTO -> {
+                    scheduleTimeDTO.setScheduleId(schedule.getId());
+                    scheduleTimeService.create(scheduleTimeDTO);
+                });
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("schedule.create.success"));
         return "redirect:/schedules";
     }
@@ -70,11 +100,19 @@ public class ScheduleController {
                             .map(FieldError::getDefaultMessage)
                             .orElse("Error")));
         }
+
+        if (bindingResult.hasFieldErrors("scheduleDateTime")) {
+            bindingResult.addError(new FieldError("scheduleTime", "time",
+                    Optional.ofNullable(bindingResult.getFieldError("scheduleDateTime"))
+                            .map(FieldError::getDefaultMessage)
+                            .orElse("Error")));
+        }
     }
 
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable(name = "id") final UUID id, final Model model) {
-        model.addAttribute("schedule", scheduleService.get(id));
+        var schedule = scheduleService.get(id);
+        model.addAttribute("schedule", schedule);
         return "schedule/edit";
     }
 

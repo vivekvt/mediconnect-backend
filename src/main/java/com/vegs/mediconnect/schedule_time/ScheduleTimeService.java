@@ -42,6 +42,13 @@ public class ScheduleTimeService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public List<ScheduleTimeDTO> getAllBySchedule(final UUID sheduleId) {
+        return scheduleTimeRepository.findAllByScheduleId(sheduleId)
+                .stream()
+                .map(scheduleTime -> mapToDTO(scheduleTime, new ScheduleTimeDTO()))
+                .toList();
+    }
+
     public UUID create(final ScheduleTimeDTO scheduleTimeDTO) {
         final ScheduleTime scheduleTime = new ScheduleTime();
         mapToEntity(scheduleTimeDTO, scheduleTime);

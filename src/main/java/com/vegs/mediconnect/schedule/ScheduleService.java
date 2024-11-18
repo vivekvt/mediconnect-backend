@@ -39,10 +39,10 @@ public class ScheduleService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public UUID create(final ScheduleDTO scheduleDTO) {
+    public Schedule create(final ScheduleDTO scheduleDTO) {
         final Schedule schedule = new Schedule();
         mapToEntity(scheduleDTO, schedule);
-        return scheduleRepository.save(schedule).getId();
+        return scheduleRepository.save(schedule);
     }
 
     public void update(final UUID id, final ScheduleDTO scheduleDTO) {
