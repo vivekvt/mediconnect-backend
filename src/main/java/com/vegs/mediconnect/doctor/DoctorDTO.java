@@ -2,11 +2,10 @@ package com.vegs.mediconnect.doctor;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.UUID;
-
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -30,6 +29,10 @@ public class DoctorDTO {
     @Size(max = 10)
     private String score = "5.0";
 
+    private Integer reviewCount;
+
     private String about;
+
+    private MultipartFile image;
 
 }

@@ -13,12 +13,20 @@
                 </div>
             </div>
             <div th:replace="~{fragments/forms::globalErrors('doctor')}" />
-            <form th:action="${requestUri}" method="post">
+            <form th:action="${requestUri}" method="post" enctype="multipart/form-data">
                 <div th:replace="~{fragments/forms::inputRow(object='doctor', field='firstName', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='doctor', field='lastName', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='doctor', field='experienceInYears', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='doctor', field='score', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='doctor', field='about', type='textarea')}" />
+                <div class="row mb-3">
+                    <label for="image" class="col-md-2 col-form-label">
+                        <span>[[#{doctor.image.label}]]</span>
+                    </label>
+                    <div class="col-md-10">
+                        <input type="file" name="image" accept="image/*" class="form-control-file" id="image">
+                    </div>
+                </div>
                 <input type="submit" th:value="#{doctor.add.headline}" class="btn btn-primary mt-4" />
             </form>
         </div>
