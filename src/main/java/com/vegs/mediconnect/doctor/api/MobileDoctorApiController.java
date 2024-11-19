@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +34,7 @@ public class MobileDoctorApiController {
     }
 
     @GetMapping("/photo/{id}")
-    public ResponseEntity<Resource> getProfilePhoto(@PathVariable(name = "id") final UUID id) throws IOException {
+    public ResponseEntity<Resource> getProfilePhoto(@PathVariable(name = "id") final UUID id) {
         Doctor doctor = doctorApiService.getDoctor(id);
 
         ByteArrayResource resource = new ByteArrayResource(doctor.getProfilePhoto());
