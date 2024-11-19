@@ -1,6 +1,5 @@
 package com.vegs.mediconnect.patient.api;
 
-import com.vegs.mediconnect.patient.PatientDTO;
 import com.vegs.mediconnect.patient.api.model.PatientDetailResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -15,7 +14,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping(value = "/api/mobile/patients", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class PatientApiController {
+public class MobilePatientApiController {
 
     private PatientApiService patientApiService;
 
