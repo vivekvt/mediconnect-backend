@@ -38,9 +38,6 @@ public class Doctor {
     @Column
     private String experienceInYears;
 
-    @Column(length = 10)
-    private String score;
-
     @Column
     private String about;
 
@@ -49,6 +46,9 @@ public class Doctor {
 
     @OneToMany(mappedBy = "doctor")
     private Set<Appointment> appointments;
+
+    @Column
+    private byte[] profilePhoto;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

@@ -47,12 +47,20 @@ public class DoctorApiService {
                 .name(doctor.getFullName())
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
-                .score(Float.parseFloat(doctor.getScore()))
+                // Calculate score
                 .description(doctor.getAbout())
                 .experienceYears(doctor.getExperienceInYears())
                 .reviewCount(randomReviewCount)
                 .schedule(schedule)
                 .build();
+    }
+
+    public byte[] getPhoto(UUID doctorId) {
+        var optDoctor = doctorRepository.findById(doctorId);
+        if (optDoctor.isEmpty()) {
+            throw new DoctorNotFoundException();
+        }
+        return optDoctor.get().getProfilePhoto();
     }
 
 }

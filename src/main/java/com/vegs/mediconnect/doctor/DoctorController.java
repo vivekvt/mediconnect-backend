@@ -3,27 +3,21 @@ package com.vegs.mediconnect.doctor;
 import com.vegs.mediconnect.util.ReferencedWarning;
 import com.vegs.mediconnect.util.WebUtils;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Objects;
 import java.util.UUID;
 
 
+@Slf4j
 @Controller
 @RequestMapping("/doctors")
 public class DoctorController {
 
-    private static final String UPLOAD_DIRECTORY = Objects.requireNonNull(
-            DoctorController.class.getResource("/static/doctor-img")).getPath();
     private final DoctorService doctorService;
 
     public DoctorController(final DoctorService doctorService) {
@@ -47,22 +41,9 @@ public class DoctorController {
         if (bindingResult.hasErrors()) {
             return "doctor/add";
         }
-        var doctorId = doctorService.create(doctorDTO);
-        saveProfilePhoto(doctorId, doctorDTO.getImage());
+        doctorService.create(doctorDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("doctor.create.success"));
         return "redirect:/doctors";
-    }
-
-    private void saveProfilePhoto(UUID doctorId, MultipartFile image) {
-        StringBuilder fileNames = new StringBuilder();
-        Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, image.getOriginalFilename());
-        fileNames.append(image.getOriginalFilename());
-        try {
-            Files.write(fileNameAndPath, image.getBytes());
-        } catch (IOException e) {
-            // TODO LOG
-            System.out.println("Error to save file");
-        }
     }
 
     @GetMapping("/edit/{id}")

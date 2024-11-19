@@ -4,13 +4,17 @@ import com.vegs.mediconnect.appointment.AppointmentRepository;
 import com.vegs.mediconnect.schedule.ScheduleRepository;
 import com.vegs.mediconnect.util.NotFoundException;
 import com.vegs.mediconnect.util.ReferencedWarning;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 
+@Slf4j
 @Service
 public class DoctorService {
 
@@ -62,7 +66,6 @@ public class DoctorService {
         doctorDTO.setFirstName(doctor.getFirstName());
         doctorDTO.setLastName(doctor.getLastName());
         doctorDTO.setExperienceInYears(doctor.getExperienceInYears());
-        doctorDTO.setScore(doctor.getScore());
         doctorDTO.setAbout(doctor.getAbout());
         return doctorDTO;
     }
@@ -71,9 +74,18 @@ public class DoctorService {
         doctor.setFirstName(doctorDTO.getFirstName());
         doctor.setLastName(doctorDTO.getLastName());
         doctor.setExperienceInYears(doctorDTO.getExperienceInYears());
-        doctor.setScore(doctorDTO.getScore());
         doctor.setAbout(doctorDTO.getAbout());
+        doctor.setProfilePhoto(getBytes(doctorDTO.getImage()));
         return doctor;
+    }
+
+    private byte[] getBytes(MultipartFile image) {
+        try {
+            return image.getBytes();
+        } catch (IOException e) {
+            log.error("Error to get bytes from doctor.image", e);
+        }
+        return null;
     }
 
     public ReferencedWarning getReferencedWarning(final UUID id) {
