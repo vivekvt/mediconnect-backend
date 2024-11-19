@@ -1,8 +1,8 @@
 package com.vegs.mediconnect.patient;
 
-import com.vegs.mediconnect.appointment.AppointmentRepository;
 import com.vegs.mediconnect.util.NotFoundException;
 import com.vegs.mediconnect.util.ReferencedWarning;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -11,16 +11,10 @@ import java.util.UUID;
 
 
 @Service
+@RequiredArgsConstructor
 public class PatientService {
 
     private final PatientRepository patientRepository;
-    private final AppointmentRepository appointmentRepository;
-
-    public PatientService(final PatientRepository patientRepository,
-            final AppointmentRepository appointmentRepository) {
-        this.patientRepository = patientRepository;
-        this.appointmentRepository = appointmentRepository;
-    }
 
     public List<PatientDTO> findAll() {
         final List<Patient> patients = patientRepository.findAll(Sort.by("id"));
@@ -67,14 +61,8 @@ public class PatientService {
 
     public ReferencedWarning getReferencedWarning(final UUID id) {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
-        final Patient patient = patientRepository.findById(id)
+        patientRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-//        final Appointment pAappointmentIdAppointment = appointmentRepository.findFirstBypAappointmentId(patient);
-//        if (pAappointmentIdAppointment != null) {
-//            referencedWarning.setKey("patient.appointment.pAappointmentId.referenced");
-//            referencedWarning.addParam(pAappointmentIdAppointment.getId());
-//            return referencedWarning;
-//        }
         return null;
     }
 

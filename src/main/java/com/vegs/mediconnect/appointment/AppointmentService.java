@@ -5,6 +5,7 @@ import com.vegs.mediconnect.patient.PatientRepository;
 import com.vegs.mediconnect.schedule.ScheduleRepository;
 import com.vegs.mediconnect.util.NotFoundException;
 import com.vegs.mediconnect.util.ReferencedWarning;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class AppointmentService {
         this.scheduleRepository = scheduleRepository;
     }
 
+    @Transactional
     public List<AppointmentDTO> findAll() {
         final List<Appointment> appointments = appointmentRepository.findAll(Sort.by("id"));
         return appointments.stream()
@@ -36,6 +38,7 @@ public class AppointmentService {
                 .toList();
     }
 
+    @Transactional
     public AppointmentDTO get(final UUID id) {
         return appointmentRepository.findById(id)
                 .map(appointment -> mapToDTO(appointment, new AppointmentDTO()))
@@ -64,8 +67,9 @@ public class AppointmentService {
         appointmentDTO.setId(appointment.getId());
         appointmentDTO.setStatus(appointment.getStatus());
         appointmentDTO.setAvailable(appointment.getAvailable());
-//        appointmentDTO.setPAappointmentId(appointment.getPAappointmentId() == null ? null : appointment.getPAappointmentId().getId());
-//        appointmentDTO.setDAappointmentId(appointment.getDAappointmentId() == null ? null : appointment.getDAappointmentId().getId());
+        appointmentDTO.setPatientId(appointment.getPatient().getId());
+        appointmentDTO.setDoctorId(appointment.getDoctor().getId());
+        appointmentDTO.setScheduleId(appointment.getSchedule().getId());
         return appointmentDTO;
     }
 
@@ -73,12 +77,9 @@ public class AppointmentService {
             final Appointment appointment) {
         appointment.setStatus(appointmentDTO.getStatus());
         appointment.setAvailable(appointmentDTO.getAvailable());
-//        final Patient pAappointmentId = appointmentDTO.getPAappointmentId() == null ? null : patientRepository.findById(appointmentDTO.getPAappointmentId())
-//                .orElseThrow(() -> new NotFoundException("pAappointmentId not found"));
-////        appointment.setPAappointmentId(pAappointmentId);
-//        final Doctor dAappointmentId = appointmentDTO.getDAappointmentId() == null ? null : doctorRepository.findById(appointmentDTO.getDAappointmentId())
-//                .orElseThrow(() -> new NotFoundException("dAappointmentId not found"));
-////        appointment.setDAappointmentId(dAappointmentId);
+        appointment.setPatient(patientRepository.getReferenceById(appointmentDTO.getPatientId()));
+        appointment.setDoctor(doctorRepository.getReferenceById(appointmentDTO.getDoctorId()));
+        appointment.setSchedule(scheduleRepository.getReferenceById(appointmentDTO.getScheduleId()));
         return appointment;
     }
 
@@ -86,12 +87,6 @@ public class AppointmentService {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-//        final Schedule sAscheduleIdSchedule = scheduleRepository.findFirstBysAscheduleId(appointment);
-//        if (sAscheduleIdSchedule != null) {
-//            referencedWarning.setKey("appointment.schedule.sAscheduleId.referenced");
-//            referencedWarning.addParam(sAscheduleIdSchedule.getId());
-//            return referencedWarning;
-//        }
         return null;
     }
 

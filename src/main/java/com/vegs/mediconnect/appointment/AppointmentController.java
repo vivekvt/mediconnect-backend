@@ -4,10 +4,13 @@ import com.vegs.mediconnect.doctor.Doctor;
 import com.vegs.mediconnect.doctor.DoctorRepository;
 import com.vegs.mediconnect.patient.Patient;
 import com.vegs.mediconnect.patient.PatientRepository;
+import com.vegs.mediconnect.schedule.Schedule;
+import com.vegs.mediconnect.schedule.ScheduleRepository;
 import com.vegs.mediconnect.util.CustomCollectors;
 import com.vegs.mediconnect.util.ReferencedWarning;
 import com.vegs.mediconnect.util.WebUtils;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,32 +18,36 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 
 @Controller
 @RequestMapping("/appointments")
+@RequiredArgsConstructor
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
-
-    public AppointmentController(final AppointmentService appointmentService,
-            final PatientRepository patientRepository, final DoctorRepository doctorRepository) {
-        this.appointmentService = appointmentService;
-        this.patientRepository = patientRepository;
-        this.doctorRepository = doctorRepository;
-    }
+    private final ScheduleRepository scheduleRepository;
 
     @ModelAttribute
     public void prepareContext(final Model model) {
-        model.addAttribute("pAappointmentIdValues", patientRepository.findAll(Sort.by("id"))
+        var dataFormat = DateTimeFormatter.ofPattern("EEE, d MMM");
+        model.addAttribute("patientIdValues", patientRepository.findAll(
+                Sort.by("lastName", "firstName"))
                 .stream()
-                .collect(CustomCollectors.toSortedMap(Patient::getId, Patient::getId)));
-        model.addAttribute("dAappointmentIdValues", doctorRepository.findAll(Sort.by("id"))
+                .collect(CustomCollectors.toSortedMap(Patient::getId, Patient::getFullName)));
+        model.addAttribute("doctorIdValues", doctorRepository.findAll(
+                Sort.by("lastName", "firstName"))
                 .stream()
-                .collect(CustomCollectors.toSortedMap(Doctor::getId, Doctor::getId)));
+                .collect(CustomCollectors.toSortedMap(Doctor::getId, Doctor::getFullName)));
+        model.addAttribute("scheduleIdValues", scheduleRepository.findAll(
+                Sort.by("date"))
+                .stream()
+                .collect(CustomCollectors.toSortedMap(Schedule::getId,
+                        schedule -> schedule.getDate().format(dataFormat))));
     }
 
     @GetMapping

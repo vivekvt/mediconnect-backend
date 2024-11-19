@@ -20,8 +20,9 @@
                             <th scope="col">[[#{appointment.id.label}]]</th>
                             <th scope="col">[[#{appointment.status.label}]]</th>
                             <th scope="col">[[#{appointment.available.label}]]</th>
-                            <th scope="col">[[#{appointment.pAappointmentId.label}]]</th>
-                            <th scope="col">[[#{appointment.dAappointmentId.label}]]</th>
+                            <th scope="col">[[#{appointment.patientId.label}]]</th>
+                            <th scope="col">[[#{appointment.doctorId.label}]]</th>
+                            <th scope="col">[[#{appointment.scheduleId.label}]]</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
@@ -30,8 +31,9 @@
                             <td>[[${appointment.id}]]</td>
                             <td>[[${appointment.status}]]</td>
                             <td>[[${appointment.available}]]</td>
-                            <td>[[${appointment.pAappointmentId}]]</td>
-                            <td>[[${appointment.dAappointmentId}]]</td>
+                            <td>[[${appointment.patientId}]]</td>
+                            <td>[[${appointment.doctorId}]]</td>
+                            <td>[[${appointment.scheduleId}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
                                     <a th:href="@{/appointments/edit/{id}(id=${appointment.id})}" class="btn btn-sm btn-secondary">[[#{appointment.list.edit}]]</a>

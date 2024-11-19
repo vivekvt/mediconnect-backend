@@ -34,7 +34,6 @@ error:
       5xx: ERROR
     codes:
       DoctorIdValid: DOCTOR_ID_VALID
-      ScheduleSAscheduleIdUnique: SCHEDULE_SASCHEDULE_ID_UNIQUE
       PatientIdValid: PATIENT_ID_VALID
 springdoc:
   pathsToMatch: /api/**
