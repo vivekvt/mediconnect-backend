@@ -38,3 +38,6 @@ error:
       PatientIdValid: PATIENT_ID_VALID
 springdoc:
   pathsToMatch: /api/**
+
+vegs:
+  photo-baseurl: ${PHOTO_BASEURL:https://mediconnect-latest.onrender.com}

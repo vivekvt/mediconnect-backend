@@ -30,6 +30,24 @@ public class DoctorController {
         return "doctor/list";
     }
 
+    @GetMapping("/newPhoto/{id}")
+    public String newPhoto(@PathVariable(name = "id") final UUID id, final Model model) {
+        model.addAttribute("doctor", new DoctorNewPhotoDTO(id, null));
+        return "doctor/newPhoto";
+    }
+
+    @PostMapping("/newPhoto/{id}")
+    public String newPhoto(@PathVariable(name = "id") final UUID id,
+                           @ModelAttribute("doctor") @Valid final DoctorNewPhotoDTO doctorDTO,
+                       final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "doctor/newPhoto";
+        }
+        doctorService.updatePhoto(id, doctorDTO.getImage());
+        redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("doctor.update.success"));
+        return "redirect:/doctors";
+    }
+
     @GetMapping("/add")
     public String add(@ModelAttribute("doctor") final DoctorDTO doctorDTO) {
         return "doctor/add";

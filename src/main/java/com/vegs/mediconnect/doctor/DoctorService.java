@@ -1,9 +1,9 @@
 package com.vegs.mediconnect.doctor;
 
-import com.vegs.mediconnect.appointment.AppointmentRepository;
-import com.vegs.mediconnect.schedule.ScheduleRepository;
 import com.vegs.mediconnect.util.NotFoundException;
 import com.vegs.mediconnect.util.ReferencedWarning;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -16,19 +16,10 @@ import java.util.UUID;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DoctorService {
 
     private final DoctorRepository doctorRepository;
-    private final ScheduleRepository scheduleRepository;
-    private final AppointmentRepository appointmentRepository;
-
-    public DoctorService(final DoctorRepository doctorRepository,
-            final ScheduleRepository scheduleRepository,
-            final AppointmentRepository appointmentRepository) {
-        this.doctorRepository = doctorRepository;
-        this.scheduleRepository = scheduleRepository;
-        this.appointmentRepository = appointmentRepository;
-    }
 
     public List<DoctorDTO> findAll() {
         final List<Doctor> doctors = doctorRepository
@@ -47,6 +38,8 @@ public class DoctorService {
     public UUID create(final DoctorDTO doctorDTO) {
         final Doctor doctor = new Doctor();
         mapToEntity(doctorDTO, doctor);
+        doctor.setProfilePhoto(getBytes(doctorDTO.getImage()));
+        doctor.setProfilePhotoExtension(doctorDTO.getImage().getContentType());
         return doctorRepository.save(doctor).getId();
     }
 
@@ -67,6 +60,7 @@ public class DoctorService {
         doctorDTO.setLastName(doctor.getLastName());
         doctorDTO.setExperienceInYears(doctor.getExperienceInYears());
         doctorDTO.setAbout(doctor.getAbout());
+        doctorDTO.setSpeciality(doctor.getSpeciality());
         return doctorDTO;
     }
 
@@ -75,7 +69,7 @@ public class DoctorService {
         doctor.setLastName(doctorDTO.getLastName());
         doctor.setExperienceInYears(doctorDTO.getExperienceInYears());
         doctor.setAbout(doctorDTO.getAbout());
-        doctor.setProfilePhoto(getBytes(doctorDTO.getImage()));
+        doctor.setSpeciality(doctorDTO.getSpeciality());
         return doctor;
     }
 
@@ -92,19 +86,14 @@ public class DoctorService {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-//        final Schedule dSscheduleIdSchedule = scheduleRepository.findFirstBydSscheduleId(doctor);
-//        if (dSscheduleIdSchedule != null) {
-//            referencedWarning.setKey("doctor.schedule.dSscheduleId.referenced");
-//            referencedWarning.addParam(dSscheduleIdSchedule.getId());
-//            return referencedWarning;
-//        }
-//        final Appointment dAappointmentIdAppointment = appointmentRepository.findFirstBydAappointmentId(doctor);
-//        if (dAappointmentIdAppointment != null) {
-//            referencedWarning.setKey("doctor.appointment.dAappointmentId.referenced");
-//            referencedWarning.addParam(dAappointmentIdAppointment.getId());
-//            return referencedWarning;
-//        }
         return null;
     }
 
+    public void updatePhoto(UUID id, @Valid MultipartFile newPhoto) {
+        final Doctor doctor = doctorRepository.findById(id)
+                .orElseThrow(NotFoundException::new);
+        doctor.setProfilePhoto(getBytes(newPhoto));
+        doctor.setProfilePhotoExtension(newPhoto.getContentType());
+        doctorRepository.save(doctor);
+    }
 }

@@ -41,6 +41,9 @@ public class Doctor {
     @Column
     private String about;
 
+    @Column
+    private String speciality;
+
     @OneToMany(mappedBy = "doctor")
     private Set<Schedule> schedules;
 
@@ -49,6 +52,9 @@ public class Doctor {
 
     @Column
     private byte[] profilePhoto;
+
+    @Column
+    private String profilePhotoExtension;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
