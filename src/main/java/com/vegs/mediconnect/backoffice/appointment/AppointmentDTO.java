@@ -27,6 +27,6 @@ public class AppointmentDTO {
     private UUID doctorId;
 
     @NotNull
-    private UUID scheduleId;
+    private UUID scheduleTimeId;
 
 }

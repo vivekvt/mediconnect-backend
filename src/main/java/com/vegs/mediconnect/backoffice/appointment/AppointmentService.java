@@ -7,7 +7,9 @@ import com.vegs.mediconnect.datasource.appointment.AppointmentRepository;
 import com.vegs.mediconnect.datasource.doctor.DoctorRepository;
 import com.vegs.mediconnect.datasource.patient.PatientRepository;
 import com.vegs.mediconnect.datasource.schedule.ScheduleRepository;
+import com.vegs.mediconnect.datasource.schedule.ScheduleTimeRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -16,21 +18,14 @@ import java.util.UUID;
 
 
 @Service
+@RequiredArgsConstructor
 public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
-    private final ScheduleRepository scheduleRepository;
+    private final ScheduleTimeRepository scheduleTimeRepository;
 
-    public AppointmentService(final AppointmentRepository appointmentRepository,
-            final PatientRepository patientRepository, final DoctorRepository doctorRepository,
-            final ScheduleRepository scheduleRepository) {
-        this.appointmentRepository = appointmentRepository;
-        this.patientRepository = patientRepository;
-        this.doctorRepository = doctorRepository;
-        this.scheduleRepository = scheduleRepository;
-    }
 
     @Transactional
     public List<AppointmentDTO> findAll() {
@@ -68,20 +63,20 @@ public class AppointmentService {
             final AppointmentDTO appointmentDTO) {
         appointmentDTO.setId(appointment.getId());
         appointmentDTO.setStatus(appointment.getStatus());
-        appointmentDTO.setAvailable(appointment.getAvailable());
+        appointmentDTO.setAvailable(appointment.getCanceled());
         appointmentDTO.setPatientId(appointment.getPatient().getId());
         appointmentDTO.setDoctorId(appointment.getDoctor().getId());
-        appointmentDTO.setScheduleId(appointment.getSchedule().getId());
+        appointmentDTO.setScheduleTimeId(appointment.getScheduleTime().getId());
         return appointmentDTO;
     }
 
     private Appointment mapToEntity(final AppointmentDTO appointmentDTO,
             final Appointment appointment) {
         appointment.setStatus(appointmentDTO.getStatus());
-        appointment.setAvailable(appointmentDTO.getAvailable());
+        appointment.setCanceled(appointmentDTO.getAvailable());
         appointment.setPatient(patientRepository.getReferenceById(appointmentDTO.getPatientId()));
         appointment.setDoctor(doctorRepository.getReferenceById(appointmentDTO.getDoctorId()));
-        appointment.setSchedule(scheduleRepository.getReferenceById(appointmentDTO.getScheduleId()));
+        appointment.setScheduleTime(scheduleTimeRepository.getReferenceById(appointmentDTO.getScheduleTimeId()));
         return appointment;
     }
 

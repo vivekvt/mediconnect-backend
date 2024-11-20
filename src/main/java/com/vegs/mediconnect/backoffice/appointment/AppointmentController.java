@@ -43,7 +43,7 @@ public class AppointmentController {
                 Sort.by("lastName", "firstName"))
                 .stream()
                 .collect(CustomCollectors.toSortedMap(Doctor::getId, Doctor::getFullName)));
-        model.addAttribute("scheduleIdValues", scheduleRepository.findAll(
+        model.addAttribute("scheduleTimeIdValues", scheduleRepository.findAll( // TODO Review me! refatorar-me
                 Sort.by("date"))
                 .stream()
                 .collect(CustomCollectors.toSortedMap(Schedule::getId,
