@@ -64,9 +64,11 @@ public class AppointmentApiService {
         var doctor = scheduleTime.getSchedule().getDoctor();
         var schedule = scheduleTime.getSchedule();
         var dataFormat = DateTimeFormatter.ofPattern("EEE, d MMM");
+        var timeFormat = DateTimeFormatter.ofPattern("h a");
         return AppointmentResponse
                 .builder()
                 .date(schedule.getDate().format(dataFormat))
+                .time(scheduleTime.getTime().format(timeFormat))
                 .status(appointment.getStatus())
                 .doctor(doctorApiService.mapToDoctorSimpleResponse(doctor))
                 .build();
@@ -82,6 +84,7 @@ public class AppointmentApiService {
         return appointment;
     }
 
+    @Transactional
     public List<AppointmentResponse> getAppointments(String email) {
         var optPatient = patientRepository.findByEmail(email);
         if (optPatient.isEmpty()) {
@@ -89,7 +92,7 @@ public class AppointmentApiService {
         }
         var patient = optPatient.get();
 
-        return appointmentRepository.findAllByPatientId(patient)
+        return appointmentRepository.findAllByPatient(patient)
                 .stream()
                 .map(this::mapToAppointmentResponse)
                 .toList();

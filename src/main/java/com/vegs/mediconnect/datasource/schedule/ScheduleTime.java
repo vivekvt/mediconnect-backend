@@ -34,7 +34,7 @@ public class ScheduleTime {
     private Schedule schedule;
 
     @Column
-    private Boolean available;
+    private Boolean available = true;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

@@ -32,7 +32,7 @@ public class Appointment {
     private String status;
 
     @Column
-    private Boolean canceled;
+    private Boolean canceled = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)

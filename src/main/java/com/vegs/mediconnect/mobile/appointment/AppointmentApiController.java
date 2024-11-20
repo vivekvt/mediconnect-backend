@@ -26,7 +26,7 @@ public class AppointmentApiController {
                 .body(appointment);
     }
 
-    @GetMapping
+    @GetMapping("/{email}")
     public ResponseEntity<List<AppointmentResponse>> getAllAppointments(
             @PathVariable(name = "email") final String email) {
         return ResponseEntity.ok(appointmentApiService.getAppointments(email));
