@@ -3,6 +3,7 @@ package com.vegs.mediconnect.datasource.appointment;
 import com.vegs.mediconnect.datasource.doctor.Doctor;
 import com.vegs.mediconnect.datasource.patient.Patient;
 import com.vegs.mediconnect.datasource.schedule.Schedule;
+import com.vegs.mediconnect.datasource.schedule.ScheduleTime;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +32,7 @@ public class Appointment {
     private String status;
 
     @Column
-    private Boolean available;
+    private Boolean canceled;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient_id", nullable = false)
@@ -42,8 +43,8 @@ public class Appointment {
     private Doctor doctor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "schedule_id", nullable = false)
-    private Schedule schedule;
+    @JoinColumn(name = "schedule_time_id", nullable = false)
+    private ScheduleTime scheduleTime;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

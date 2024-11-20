@@ -39,6 +39,9 @@ public class Schedule {
     @OneToMany(mappedBy = "schedule", fetch = FetchType.EAGER)
     private List<ScheduleTime> scheduleTimes;
 
+    @Column
+    private Boolean available;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private OffsetDateTime dateCreated;

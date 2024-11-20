@@ -11,5 +11,5 @@ import java.util.UUID;
 public interface ScheduleTimeRepository extends JpaRepository<ScheduleTime, UUID> {
 
     Optional<ScheduleTime> findByTimeAndScheduleId(LocalTime time, UUID scheduleId);
-    List<ScheduleTime> findAllByScheduleId(UUID sheduleId);
+    List<ScheduleTime> findAllByScheduleId(UUID sheduleId); // TODO this is incorrect
 }

@@ -2,10 +2,12 @@ package com.vegs.mediconnect.mobile.doctor;
 
 import com.vegs.mediconnect.datasource.doctor.Doctor;
 import com.vegs.mediconnect.datasource.doctor.DoctorRepository;
+import com.vegs.mediconnect.datasource.schedule.Schedule;
 import com.vegs.mediconnect.datasource.schedule.ScheduleTime;
 import com.vegs.mediconnect.mobile.doctor.model.DoctorResponse;
 import com.vegs.mediconnect.mobile.doctor.model.DoctorSimpleResponse;
 import com.vegs.mediconnect.mobile.schedule.model.ScheduleResponse;
+import com.vegs.mediconnect.mobile.schedule.model.ScheduleTimeResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,16 +32,20 @@ public class DoctorApiService {
     public List<DoctorSimpleResponse> getDoctors() {
         return doctorRepository.findAll()
                 .stream()
-                .map(doctor -> DoctorSimpleResponse
-                        .builder()
-                        .id(doctor.getId().toString())
-                        .photo(getPhotoUrl(doctor))
-                        .specialty(doctor.getSpecialty())
-                        .name(doctor.getFullName())
-                        .firstName(doctor.getFirstName())
-                        .lastName(doctor.getLastName())
-                        .build()
-                ).toList();
+                .map(this::mapToDoctorSimpleResponse)
+                .toList();
+    }
+
+    public DoctorSimpleResponse mapToDoctorSimpleResponse(Doctor doctor) {
+        return DoctorSimpleResponse
+                .builder()
+                .id(doctor.getId().toString())
+                .photo(getPhotoUrl(doctor))
+                .specialty(doctor.getSpecialty())
+                .name(doctor.getFullName())
+                .firstName(doctor.getFirstName())
+                .lastName(doctor.getLastName())
+                .build();
     }
 
     private String getPhotoUrl(Doctor doctor) {
@@ -57,16 +63,16 @@ public class DoctorApiService {
         var dateFormat = DateTimeFormatter.ofPattern("EEE, d MMM");
         var timeFormat = DateTimeFormatter.ofPattern("h a");
         var schedule = new ArrayList<ScheduleResponse>();
-        doctor.getSchedules().forEach(s -> schedule.add(ScheduleResponse
-                .builder()
+        doctor.getSchedules().forEach(s -> {
+            var times = getTimes(s, timeFormat);
+            if (!times.isEmpty()) {
+                schedule.add(ScheduleResponse
+                        .builder()
                         .date(s.getDate().format(dateFormat))
-                        .times(s.getScheduleTimes()
-                                .stream()
-                                .map(ScheduleTime::getTime)
-                                .map(time -> time.format(timeFormat))
-                                .toList()
-                        )
-                .build()));
+                        .times(times)
+                        .build());
+            }
+        });
         Random random = new Random();
         int randomReviewCount = 30 + random.nextInt(71);
         return DoctorResponse
@@ -82,6 +88,18 @@ public class DoctorApiService {
                 .reviewCount(randomReviewCount)
                 .schedule(schedule)
                 .build();
+    }
+
+    private List<ScheduleTimeResponse> getTimes(Schedule s, DateTimeFormatter timeFormat) {
+        return s.getScheduleTimes()
+                .stream()
+                .filter(ScheduleTime::getAvailable)
+                .map(scheduleTime -> ScheduleTimeResponse
+                        .builder()
+                        .id(scheduleTime.getId())
+                        .time(scheduleTime.getTime().format(timeFormat))
+                        .build())
+                .toList();
     }
 
     public Doctor getDoctor(UUID doctorId) {
