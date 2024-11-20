@@ -1,5 +1,6 @@
 package com.vegs.mediconnect.mobile.patient;
 
+import com.vegs.mediconnect.mobile.patient.model.PatientDetailRequest;
 import com.vegs.mediconnect.mobile.patient.model.PatientDetailResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MobilePatientApiController {
 
-    private PatientApiService patientApiService;
+    private final PatientApiService patientApiService;
 
     @GetMapping("/{email}")
     public ResponseEntity<PatientDetailResponse> getPatientByEmail(@PathVariable(name = "email") final String email) {
@@ -25,7 +26,7 @@ public class MobilePatientApiController {
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<UUID> createPatient(@RequestBody @Valid final PatientDetailResponse patientDTO) {
+    public ResponseEntity<UUID> createPatient(@RequestBody @Valid final PatientDetailRequest patientDTO) {
         final UUID createdId = patientApiService.create(patientDTO);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }

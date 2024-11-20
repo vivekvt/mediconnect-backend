@@ -2,6 +2,7 @@ package com.vegs.mediconnect.mobile.patient;
 
 import com.vegs.mediconnect.datasource.patient.Patient;
 import com.vegs.mediconnect.datasource.patient.PatientRepository;
+import com.vegs.mediconnect.mobile.patient.model.PatientDetailRequest;
 import com.vegs.mediconnect.mobile.patient.model.PatientDetailResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class PatientApiService {
         return mapToPatientDetailResponse(patient);
     }
 
-    public UUID create(@Valid PatientDetailResponse patientDTO) {
+    public UUID create(@Valid PatientDetailRequest patientDTO) {
         return patientRepository.save(mapToEntity(patientDTO)).getId();
     }
 
@@ -42,6 +43,20 @@ public class PatientApiService {
         patient.setBirthdate(patientDetailResponse.getBirthdate());
         patient.setPhoneNumber(patientDetailResponse.getPhoneNumber());
         patient.setAddress(patientDetailResponse.getAddress());
+    }
+
+    private Patient mapToEntity(PatientDetailRequest patientDetailRequest) {
+        return Patient
+                .builder()
+                .email(patientDetailRequest.getEmail())
+                .clinicCode(patientDetailRequest.getClinicCode())
+                .firstName(patientDetailRequest.getFirstName())
+                .lastName(patientDetailRequest.getLastName())
+                .gender(patientDetailRequest.getGender())
+                .birthdate(patientDetailRequest.getBirthdate())
+                .phoneNumber(patientDetailRequest.getPhoneNumber())
+                .address(patientDetailRequest.getAddress())
+                .build();
     }
 
     private Patient mapToEntity(PatientDetailResponse patientDetailResponse) {
