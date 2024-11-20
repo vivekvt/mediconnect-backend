@@ -30,7 +30,7 @@ public class Patient {
     @UuidGenerator
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)

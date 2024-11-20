@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -23,7 +24,10 @@ public class PatientApiService {
     }
 
     public UUID create(@Valid PatientDetailRequest patientDTO) {
-        return patientRepository.save(mapToEntity(patientDTO)).getId();
+        Optional<Patient> optPatient = patientRepository.findByEmail(patientDTO.getEmail());
+        var patient = mapToEntity(patientDTO);
+        optPatient.ifPresent(p -> patient.setId(p.getId()));
+        return patientRepository.save(patient).getId();
     }
 
     public void update(UUID id, PatientDetailResponse patientDTO) {

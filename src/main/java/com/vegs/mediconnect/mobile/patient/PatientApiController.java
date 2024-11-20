@@ -15,7 +15,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping(value = "/api/mobile/patients", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class MobilePatientApiController {
+public class PatientApiController {
 
     private final PatientApiService patientApiService;
 
