@@ -27,7 +27,7 @@ public class DoctorDTO {
     private String experienceInYears;
 
     @NotNull
-    private String speciality;
+    private String specialty;
 
     private String about;
 

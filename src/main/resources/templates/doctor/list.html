@@ -20,7 +20,7 @@
                             <th scope="col">[[#{doctor.firstName.label}]]</th>
                             <th scope="col">[[#{doctor.lastName.label}]]</th>
                             <th scope="col">[[#{doctor.experienceInYears.label}]]</th>
-                            <th scope="col">[[#{doctor.speciality.label}]]</th>
+                            <th scope="col">[[#{doctor.specialty.label}]]</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
@@ -29,7 +29,7 @@
                             <td>[[${doctor.firstName}]]</td>
                             <td>[[${doctor.lastName}]]</td>
                             <td>[[${doctor.experienceInYears}]]</td>
-                            <td>[[${doctor.speciality}]]</td>
+                            <td>[[${doctor.specialty}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
                                     <a th:href="@{/doctors/newPhoto/{id}(id=${doctor.id})}" class="btn btn-sm btn-secondary">[[#{doctor.list.newPhoto}]]</a>

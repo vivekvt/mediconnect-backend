@@ -34,7 +34,7 @@ public class DoctorApiService {
                         .builder()
                         .id(doctor.getId().toString())
                         .photo(getPhotoUrl(doctor))
-                        .speciality(doctor.getSpeciality())
+                        .specialty(doctor.getSpecialty())
                         .name(doctor.getFullName())
                         .firstName(doctor.getFirstName())
                         .lastName(doctor.getLastName())

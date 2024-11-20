@@ -42,7 +42,7 @@ public class Doctor {
     private String about;
 
     @Column
-    private String speciality;
+    private String specialty;
 
     @OneToMany(mappedBy = "doctor")
     private Set<Schedule> schedules;

@@ -17,7 +17,7 @@
                 <div th:replace="~{fragments/forms::inputRow(object='doctor', field='firstName', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='doctor', field='lastName', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='doctor', field='experienceInYears', required=true)}" />
-                <div th:replace="~{fragments/forms::inputRow(object='doctor', field='speciality', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='doctor', field='specialty', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='doctor', field='about', type='textarea')}" />
                 <input type="submit" th:value="#{doctor.edit.headline}" class="btn btn-primary mt-4" />
             </form>

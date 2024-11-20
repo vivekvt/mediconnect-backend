@@ -13,7 +13,7 @@ public class DoctorSimpleResponse {
     private String firstName;
     private String lastName;
     private String name;
-    private String speciality;
+    private String specialty;
     private String photo;
 
 }

@@ -62,7 +62,7 @@ public class DoctorService {
         doctorDTO.setLastName(doctor.getLastName());
         doctorDTO.setExperienceInYears(doctor.getExperienceInYears());
         doctorDTO.setAbout(doctor.getAbout());
-        doctorDTO.setSpeciality(doctor.getSpeciality());
+        doctorDTO.setSpecialty(doctor.getSpecialty());
         return doctorDTO;
     }
 
@@ -71,7 +71,7 @@ public class DoctorService {
         doctor.setLastName(doctorDTO.getLastName());
         doctor.setExperienceInYears(doctorDTO.getExperienceInYears());
         doctor.setAbout(doctorDTO.getAbout());
-        doctor.setSpeciality(doctorDTO.getSpeciality());
+        doctor.setSpecialty(doctorDTO.getSpecialty());
         return doctor;
     }
 
