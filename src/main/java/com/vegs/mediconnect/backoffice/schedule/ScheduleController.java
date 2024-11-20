@@ -1,12 +1,12 @@
 package com.vegs.mediconnect.backoffice.schedule;
 
-import com.vegs.mediconnect.datasource.doctor.Doctor;
-import com.vegs.mediconnect.datasource.doctor.DoctorRepository;
 import com.vegs.mediconnect.backoffice.schedule_time.ScheduleTimeDTO;
 import com.vegs.mediconnect.backoffice.schedule_time.ScheduleTimeService;
 import com.vegs.mediconnect.backoffice.util.CustomCollectors;
 import com.vegs.mediconnect.backoffice.util.ReferencedWarning;
 import com.vegs.mediconnect.backoffice.util.WebUtils;
+import com.vegs.mediconnect.datasource.doctor.Doctor;
+import com.vegs.mediconnect.datasource.doctor.DoctorRepository;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;

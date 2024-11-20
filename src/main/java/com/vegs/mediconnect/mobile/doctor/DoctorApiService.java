@@ -2,10 +2,10 @@ package com.vegs.mediconnect.mobile.doctor;
 
 import com.vegs.mediconnect.datasource.doctor.Doctor;
 import com.vegs.mediconnect.datasource.doctor.DoctorRepository;
+import com.vegs.mediconnect.datasource.schedule.ScheduleTime;
 import com.vegs.mediconnect.mobile.doctor.model.DoctorResponse;
 import com.vegs.mediconnect.mobile.doctor.model.DoctorSimpleResponse;
 import com.vegs.mediconnect.mobile.schedule.model.ScheduleResponse;
-import com.vegs.mediconnect.datasource.schedule.ScheduleTime;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

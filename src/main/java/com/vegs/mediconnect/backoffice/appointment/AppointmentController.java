@@ -1,14 +1,14 @@
 package com.vegs.mediconnect.backoffice.appointment;
 
+import com.vegs.mediconnect.backoffice.util.CustomCollectors;
+import com.vegs.mediconnect.backoffice.util.ReferencedWarning;
+import com.vegs.mediconnect.backoffice.util.WebUtils;
 import com.vegs.mediconnect.datasource.doctor.Doctor;
 import com.vegs.mediconnect.datasource.doctor.DoctorRepository;
 import com.vegs.mediconnect.datasource.patient.Patient;
 import com.vegs.mediconnect.datasource.patient.PatientRepository;
 import com.vegs.mediconnect.datasource.schedule.Schedule;
 import com.vegs.mediconnect.datasource.schedule.ScheduleRepository;
-import com.vegs.mediconnect.backoffice.util.CustomCollectors;
-import com.vegs.mediconnect.backoffice.util.ReferencedWarning;
-import com.vegs.mediconnect.backoffice.util.WebUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
