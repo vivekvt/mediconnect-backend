@@ -2,7 +2,6 @@ package com.vegs.mediconnect.datasource.appointment;
 
 import com.vegs.mediconnect.datasource.doctor.Doctor;
 import com.vegs.mediconnect.datasource.patient.Patient;
-import com.vegs.mediconnect.datasource.schedule.Schedule;
 import com.vegs.mediconnect.datasource.schedule.ScheduleTime;
 import jakarta.persistence.*;
 import lombok.Getter;

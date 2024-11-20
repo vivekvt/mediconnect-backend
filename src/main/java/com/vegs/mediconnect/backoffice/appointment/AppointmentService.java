@@ -6,7 +6,6 @@ import com.vegs.mediconnect.datasource.appointment.Appointment;
 import com.vegs.mediconnect.datasource.appointment.AppointmentRepository;
 import com.vegs.mediconnect.datasource.doctor.DoctorRepository;
 import com.vegs.mediconnect.datasource.patient.PatientRepository;
-import com.vegs.mediconnect.datasource.schedule.ScheduleRepository;
 import com.vegs.mediconnect.datasource.schedule.ScheduleTimeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
