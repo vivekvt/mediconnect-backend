@@ -20,7 +20,7 @@ public class ReviewApiController {
     private final ReviewApiService reviewApiService;
 
     @PostMapping
-    public ResponseEntity<AppointmentResponse> createReview(@RequestBody ReviewRequest reviewRequest) {
+    public ResponseEntity<Void> createReview(@RequestBody ReviewRequest reviewRequest) {
         reviewApiService.createReview(reviewRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
