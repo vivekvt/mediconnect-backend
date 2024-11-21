@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static java.lang.String.format;
 
@@ -39,7 +36,9 @@ public class DoctorApiService {
         return doctorRepository.findAll()
                 .stream()
                 .map(this::mapToDoctorSimpleResponse)
-                .sorted(Comparator.comparing(DoctorSimpleResponse::getScore))
+                .sorted(Comparator.comparing(
+                        doctor -> Optional.ofNullable(doctor.getScore()).orElse(0.0f))
+                )
                 .toList();
     }
 
