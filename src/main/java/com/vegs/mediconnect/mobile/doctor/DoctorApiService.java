@@ -2,10 +2,12 @@ package com.vegs.mediconnect.mobile.doctor;
 
 import com.vegs.mediconnect.datasource.doctor.Doctor;
 import com.vegs.mediconnect.datasource.doctor.DoctorRepository;
+import com.vegs.mediconnect.datasource.review.ReviewRepository;
 import com.vegs.mediconnect.datasource.schedule.Schedule;
 import com.vegs.mediconnect.datasource.schedule.ScheduleTime;
 import com.vegs.mediconnect.mobile.doctor.model.DoctorResponse;
 import com.vegs.mediconnect.mobile.doctor.model.DoctorSimpleResponse;
+import com.vegs.mediconnect.mobile.review.model.ReviewDTO;
 import com.vegs.mediconnect.mobile.schedule.model.ScheduleResponse;
 import com.vegs.mediconnect.mobile.schedule.model.ScheduleTimeResponse;
 import jakarta.transaction.Transactional;
@@ -16,7 +18,10 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 
 import static java.lang.String.format;
 
@@ -25,6 +30,8 @@ import static java.lang.String.format;
 public class DoctorApiService {
 
     private final DoctorRepository doctorRepository;
+    private final ReviewRepository reviewRepository;
+
     @Value("${vegs.photo-baseurl}")
     private String photoBaseulr;
 
@@ -32,6 +39,7 @@ public class DoctorApiService {
         return doctorRepository.findAll()
                 .stream()
                 .map(this::mapToDoctorSimpleResponse)
+                .sorted(Comparator.comparing(DoctorSimpleResponse::getScore))
                 .toList();
     }
 
@@ -61,7 +69,7 @@ public class DoctorApiService {
                 .sorted(Comparator.comparing(Schedule::getDate))
                 .forEach(schedule -> addIfApplicable(schedule, dateFormat, timeFormat, scheduleResponses));
 
-        var randomReview = createRandomReview();
+        var randomReview = calculateReview(doctor);
 
         return DoctorResponse
                 .builder()
@@ -95,7 +103,7 @@ public class DoctorApiService {
     }
 
     public DoctorSimpleResponse mapToDoctorSimpleResponse(Doctor doctor) {
-        var randomReview = createRandomReview();
+        var randomReview = calculateReview(doctor);
         return DoctorSimpleResponse
                 .builder()
                 .id(doctor.getId())
@@ -136,16 +144,23 @@ public class DoctorApiService {
         return format("%s/api/mobile/doctors/photo/%s", photoBaseulr, doctor.getId().toString());
     }
 
-    private Review createRandomReview() {
-        // Fake Review
-        Random random = new Random();
-        int randomReviewCount = 30 + random.nextInt(71); // Range [30, 100]
-        float randomScore = 1.0f + random.nextFloat() * (5.0f - 1.0f); // Range [1.0, 5.0]
-        randomScore = Math.round(randomScore * 10) / 10.0f;
+    private ReviewDTO calculateReview(Doctor doctor) {
+        var reviews = reviewRepository
+                .findAllByDoctor(doctor);
 
-        return new Review(randomReviewCount, randomScore);
+        if (reviews.isEmpty()) {
+            return new ReviewDTO(null, null);
+        }
+
+        Integer reviewCount = reviews.size();
+        Float total = 0f;
+        for (var review : reviews) {
+            total += review.getScore();
+        }
+        float score = total/reviewCount;
+        score = Math.round(score * 10) / 10.0f;
+
+        return new ReviewDTO(reviewCount, score);
     }
-
-    record Review(Integer count, Float score) {}
 
 }
