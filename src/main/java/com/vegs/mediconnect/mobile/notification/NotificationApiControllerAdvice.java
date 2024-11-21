@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class NotificationApiControllerAdvice {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<NotificationRequest> handleNotificationNotFound(RuntimeException exception) {
-        return ResponseEntity.badRequest().build();
+    @ExceptionHandler(NotificationNotFoundException.class)
+    public ResponseEntity<NotificationRequest> handleNotificationNotFound(NotificationNotFoundException exception) {
+        return ResponseEntity.notFound().build();
     }
 }
