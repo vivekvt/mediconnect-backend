@@ -5,11 +5,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @Builder
 public class AppointmentResponse {
 
+    private UUID id;
     private String status;
     private String date;
     private String time;

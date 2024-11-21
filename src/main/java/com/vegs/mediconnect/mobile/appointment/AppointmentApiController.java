@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -30,6 +31,13 @@ public class AppointmentApiController {
     public ResponseEntity<List<AppointmentResponse>> getAllAppointments(
             @PathVariable(name = "email") final String email) {
         return ResponseEntity.ok(appointmentApiService.getAppointments(email));
+    }
+
+    @PutMapping("/cancel/{id}")
+    public ResponseEntity<Void> cancelAppointment(
+            @PathVariable(name = "id") final UUID id) {
+        appointmentApiService.cancelAppointment(id);
+        return ResponseEntity.accepted().build();
     }
 
 }

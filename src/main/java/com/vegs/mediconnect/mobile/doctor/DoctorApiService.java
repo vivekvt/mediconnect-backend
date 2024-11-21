@@ -13,11 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 import static java.lang.String.format;
 
@@ -36,20 +35,12 @@ public class DoctorApiService {
                 .toList();
     }
 
-    public DoctorSimpleResponse mapToDoctorSimpleResponse(Doctor doctor) {
-        return DoctorSimpleResponse
-                .builder()
-                .id(doctor.getId().toString())
-                .photo(getPhotoUrl(doctor))
-                .specialty(doctor.getSpecialty())
-                .name(doctor.getFullName())
-                .firstName(doctor.getFirstName())
-                .lastName(doctor.getLastName())
-                .build();
-    }
-
-    private String getPhotoUrl(Doctor doctor) {
-        return format("%s/api/mobile/doctors/photo/%s", photoBaseulr, doctor.getId().toString());
+    public Doctor getDoctor(UUID doctorId) {
+        var optDoctor = doctorRepository.findById(doctorId);
+        if (optDoctor.isEmpty()) {
+            throw new DoctorNotFoundException();
+        }
+        return optDoctor.get();
     }
 
     @Transactional
@@ -62,38 +53,69 @@ public class DoctorApiService {
         var doctor = optDoctor.get();
         var dateFormat = DateTimeFormatter.ofPattern("EEE, d MMM");
         var timeFormat = DateTimeFormatter.ofPattern("h a");
-        var schedule = new ArrayList<ScheduleResponse>();
-        doctor.getSchedules().forEach(s -> {
-            var times = getTimes(s, timeFormat);
-            if (!times.isEmpty()) {
-                schedule.add(ScheduleResponse
-                        .builder()
-                        .date(s.getDate().format(dateFormat))
-                        .times(times)
-                        .build());
-            }
-        });
-        Random random = new Random();
-        int randomReviewCount = 30 + random.nextInt(71);
+        var scheduleResponses = new ArrayList<ScheduleResponse>();
+        doctor
+                .getSchedules()
+                .stream()
+                .filter(DoctorApiService::isTodayOrLate)
+                .sorted(Comparator.comparing(Schedule::getDate))
+                .forEach(schedule -> addIfApplicable(schedule, dateFormat, timeFormat, scheduleResponses));
+
+        var randomReview = createRandomReview();
+
         return DoctorResponse
                 .builder()
                 .name(doctor.getFullName())
                 .firstName(doctor.getFirstName())
                 .lastName(doctor.getLastName())
                 .photo(getPhotoUrl(doctor))
-                // Calculate score
-                .score(4.9f)
                 .description(doctor.getAbout())
                 .experienceYears(doctor.getExperienceInYears())
-                .reviewCount(randomReviewCount)
-                .schedule(schedule)
+                .score(randomReview.score())
+                .reviewCount(randomReview.count())
+                .schedule(scheduleResponses)
                 .build();
     }
 
-    private List<ScheduleTimeResponse> getTimes(Schedule s, DateTimeFormatter timeFormat) {
-        return s.getScheduleTimes()
+    private void addIfApplicable(Schedule schedule,
+                                 DateTimeFormatter dateFormat, DateTimeFormatter timeFormat,
+                                 List<ScheduleResponse> scheduleResponses) {
+        var times = getTimes(schedule, timeFormat);
+        if (!times.isEmpty()) {
+            scheduleResponses.add(ScheduleResponse
+                    .builder()
+                    .date(schedule.getDate().format(dateFormat))
+                    .times(times)
+                    .build());
+        }
+    }
+
+    private static boolean isTodayOrLate(Schedule schedule) {
+        return !LocalDate.now().isAfter(schedule.getDate());
+    }
+
+    public DoctorSimpleResponse mapToDoctorSimpleResponse(Doctor doctor) {
+        var randomReview = createRandomReview();
+        return DoctorSimpleResponse
+                .builder()
+                .id(doctor.getId())
+                .photo(getPhotoUrl(doctor))
+                .specialty(doctor.getSpecialty())
+                .name(doctor.getFullName())
+                .firstName(doctor.getFirstName())
+                .lastName(doctor.getLastName())
+                .score(randomReview.score())
+                .reviewCount(randomReview.count())
+                .build();
+    }
+
+    private List<ScheduleTimeResponse> getTimes(Schedule schedule, DateTimeFormatter timeFormat) {
+        return schedule
+                .getScheduleTimes()
                 .stream()
                 .filter(ScheduleTime::getAvailable)
+                .filter(this::isAtLeastSixHoursAhead)
+                .sorted(Comparator.comparing(ScheduleTime::getTime))
                 .map(scheduleTime -> ScheduleTimeResponse
                         .builder()
                         .id(scheduleTime.getId())
@@ -102,12 +124,28 @@ public class DoctorApiService {
                 .toList();
     }
 
-    public Doctor getDoctor(UUID doctorId) {
-        var optDoctor = doctorRepository.findById(doctorId);
-        if (optDoctor.isEmpty()) {
-            throw new DoctorNotFoundException();
-        }
-        return optDoctor.get();
+    private boolean isAtLeastSixHoursAhead(ScheduleTime scheduleTime) {
+        return scheduleTime
+                .getDateTime()
+                .isAfter(LocalDateTime
+                        .now()
+                        .plusHours(6));
     }
+
+    private String getPhotoUrl(Doctor doctor) {
+        return format("%s/api/mobile/doctors/photo/%s", photoBaseulr, doctor.getId().toString());
+    }
+
+    private Review createRandomReview() {
+        // Fake Review
+        Random random = new Random();
+        int randomReviewCount = 30 + random.nextInt(71); // Range [30, 100]
+        float randomScore = 1.0f + random.nextFloat() * (5.0f - 1.0f); // Range [1.0, 5.0]
+        randomScore = Math.round(randomScore * 10) / 10.0f;
+
+        return new Review(randomReviewCount, randomScore);
+    }
+
+    record Review(Integer count, Float score) {}
 
 }

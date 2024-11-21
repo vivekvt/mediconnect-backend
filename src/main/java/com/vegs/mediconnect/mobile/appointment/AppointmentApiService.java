@@ -17,7 +17,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,7 +34,7 @@ public class AppointmentApiService {
 
     @Transactional
     public AppointmentResponse create(AppointmentRequest appointmentRequest) {
-        var appointment = mapToEntity(appointmentRequest.getScheduleTimeId(), appointmentRequest.getPatientEmail());
+        var appointment = createAppointment(appointmentRequest.getScheduleTimeId(), appointmentRequest.getPatientEmail());
         var scheduleTime = appointment.getScheduleTime();
         // Make Schedule Time unavailable
         scheduleTime.setAvailable(false);
@@ -40,48 +42,6 @@ public class AppointmentApiService {
         // Create new appointment
         var createdAppointment = appointmentRepository.save(appointment);
         return mapToAppointmentResponse(createdAppointment);
-    }
-
-    private Appointment mapToEntity(UUID scheduleTimeId, String patientEmail) {
-        // Get ScheduleTime Entity
-        var scheduleTime = scheduleTimeRepository.findById(scheduleTimeId)
-                .orElseThrow(ScheduleTimeNotFoundException::new);
-
-        // Get Patient Entity
-        var patient = patientRepository.findByEmail(patientEmail)
-                .orElseThrow(PatientNotFoundException::new);
-
-        // Get Doctor Entity
-        var doctor = scheduleTime.getSchedule().getDoctor();
-
-        // Map to Appointment Entity
-        return mapToEntity(scheduleTime, patient, doctor);
-    }
-
-    private AppointmentResponse mapToAppointmentResponse(Appointment appointment) {
-        // Build AppointmentResponse
-        var scheduleTime = appointment.getScheduleTime();
-        var doctor = scheduleTime.getSchedule().getDoctor();
-        var schedule = scheduleTime.getSchedule();
-        var dataFormat = DateTimeFormatter.ofPattern("EEE, d MMM");
-        var timeFormat = DateTimeFormatter.ofPattern("h a");
-        return AppointmentResponse
-                .builder()
-                .date(schedule.getDate().format(dataFormat))
-                .time(scheduleTime.getTime().format(timeFormat))
-                .status(appointment.getStatus())
-                .doctor(doctorApiService.mapToDoctorSimpleResponse(doctor))
-                .build();
-    }
-
-    private Appointment mapToEntity(ScheduleTime scheduleTime, Patient patient, Doctor doctor) {
-        var appointment = new Appointment();
-        appointment.setStatus(AppointmentStatus.CREATED.getStatus());
-        appointment.setCanceled(false);
-        appointment.setScheduleTime(scheduleTime);
-        appointment.setDoctor(doctor);
-        appointment.setPatient(patient);
-        return appointment;
     }
 
     @Transactional
@@ -94,8 +54,77 @@ public class AppointmentApiService {
 
         return appointmentRepository.findAllByPatient(patient)
                 .stream()
+                .sorted(Comparator.comparing(Appointment::getDateTime))
                 .map(this::mapToAppointmentResponse)
                 .toList();
+    }
+
+    public void cancelAppointment(UUID appointmentId) {
+        appointmentRepository.findById(appointmentId)
+                .ifPresentOrElse(this::cancelAppointment, AppointmentNotFoundException::new);
+    }
+
+    private void cancelAppointment(Appointment appointment) {
+        appointment.setCanceled(Boolean.TRUE);
+        appointment.setStatus(AppointmentStatus.CANCELED.getStatus());
+        appointmentRepository.save(appointment);
+    }
+
+    // Mapping to AppointmentResponse
+
+    private AppointmentResponse mapToAppointmentResponse(Appointment appointment) {
+        // Build AppointmentResponse
+        var scheduleTime = appointment.getScheduleTime();
+        var doctor = scheduleTime.getSchedule().getDoctor();
+        var schedule = scheduleTime.getSchedule();
+        var dataFormat = DateTimeFormatter.ofPattern("EEE, d MMM");
+        var timeFormat = DateTimeFormatter.ofPattern("h a");
+        return AppointmentResponse
+                .builder()
+                .id(appointment.getId())
+                .date(schedule.getDate().format(dataFormat))
+                .time(scheduleTime.getTime().format(timeFormat))
+                .status(getStatus(appointment))
+                .doctor(doctorApiService.mapToDoctorSimpleResponse(doctor))
+                .build();
+    }
+
+    private String getStatus(Appointment appointment) {
+        if (appointment.getCanceled()) {
+            return AppointmentStatus.CANCELED.getStatus();
+        }
+        if (LocalDate.now().isAfter(appointment.getScheduleTime().getSchedule().getDate())) {
+            return AppointmentStatus.COMPLETED.getStatus();
+        }
+        return AppointmentStatus.UPCOMING.getStatus();
+    }
+
+    // Create new Appointment
+
+    private Appointment createAppointment(UUID scheduleTimeId, String patientEmail) {
+        // Get ScheduleTime Entity
+        var scheduleTime = scheduleTimeRepository.findById(scheduleTimeId)
+                .orElseThrow(ScheduleTimeNotFoundException::new);
+
+        // Get Patient Entity
+        var patient = patientRepository.findByEmail(patientEmail)
+                .orElseThrow(PatientNotFoundException::new);
+
+        // Get Doctor Entity
+        var doctor = scheduleTime.getSchedule().getDoctor();
+
+        // Map to Appointment Entity
+        return createAppointment(scheduleTime, patient, doctor);
+    }
+
+    private Appointment createAppointment(ScheduleTime scheduleTime, Patient patient, Doctor doctor) {
+        var appointment = new Appointment();
+        appointment.setStatus(AppointmentStatus.UPCOMING.getStatus());
+        appointment.setCanceled(false);
+        appointment.setScheduleTime(scheduleTime);
+        appointment.setDoctor(doctor);
+        appointment.setPatient(patient);
+        return appointment;
     }
 
 }

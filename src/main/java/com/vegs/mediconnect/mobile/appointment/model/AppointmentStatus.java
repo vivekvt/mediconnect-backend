@@ -2,8 +2,9 @@ package com.vegs.mediconnect.mobile.appointment.model;
 
 public enum AppointmentStatus {
 
-    CREATED("CREATED"),
-    CANCELED("CANCELED");
+    UPCOMING("UPCOMING"),
+    CANCELED("CANCELED"),
+    COMPLETED("COMPLETED");
 
 
     AppointmentStatus(String status) {
