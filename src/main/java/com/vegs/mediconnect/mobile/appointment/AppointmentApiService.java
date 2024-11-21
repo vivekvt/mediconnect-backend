@@ -59,6 +59,7 @@ public class AppointmentApiService {
                 .toList();
     }
 
+    @Transactional
     public void cancelAppointment(UUID appointmentId) {
         appointmentRepository.findById(appointmentId)
                 .ifPresentOrElse(this::cancelAppointment, AppointmentNotFoundException::new);
@@ -68,6 +69,9 @@ public class AppointmentApiService {
         appointment.setCanceled(Boolean.TRUE);
         appointment.setStatus(AppointmentStatus.CANCELED.getStatus());
         appointmentRepository.save(appointment);
+        var schedule = appointment.getScheduleTime();
+        schedule.setAvailable(true);
+        scheduleTimeRepository.save(schedule);
     }
 
     // Mapping to AppointmentResponse
