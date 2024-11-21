@@ -32,6 +32,9 @@ public class Notification {
     @Column(nullable = false)
     private Boolean sendAllPatients;
 
+    @Column
+    private Boolean isDeleted;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private OffsetDateTime dateCreated;
@@ -39,5 +42,9 @@ public class Notification {
     @LastModifiedDate
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
+
+    public boolean notDeleted() {
+        return !Boolean.TRUE.equals(isDeleted);
+    }
 
 }

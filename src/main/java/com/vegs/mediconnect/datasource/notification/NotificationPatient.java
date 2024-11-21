@@ -43,4 +43,12 @@ public class NotificationPatient {
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
 
+    public boolean notAck() {
+        return Boolean.FALSE.equals(acknowledged);
+    }
+
+    public boolean notDeleted() {
+        return notificationId.notDeleted();
+    }
+
 }
