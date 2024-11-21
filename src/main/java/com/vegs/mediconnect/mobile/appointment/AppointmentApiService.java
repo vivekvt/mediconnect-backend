@@ -93,7 +93,7 @@ public class AppointmentApiService {
         if (appointment.getCanceled()) {
             return AppointmentStatus.CANCELED.getStatus();
         }
-        if (LocalDate.now().isAfter(appointment.getScheduleTime().getSchedule().getDate())) {
+        if (appointment.getScheduleTime().getSchedule().getDate().isBefore(LocalDate.now())) {
             return AppointmentStatus.COMPLETED.getStatus();
         }
         return AppointmentStatus.UPCOMING.getStatus();
