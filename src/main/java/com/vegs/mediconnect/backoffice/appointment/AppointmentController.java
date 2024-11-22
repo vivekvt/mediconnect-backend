@@ -91,4 +91,18 @@ public class AppointmentController {
         return "redirect:/appointments";
     }
 
+    @PostMapping("/remove/{id}")
+    public String remove(@PathVariable(name = "id") final UUID id,
+                         final RedirectAttributes redirectAttributes) {
+        final ReferencedWarning referencedWarning = appointmentService.getReferencedWarning(id);
+        if (referencedWarning != null) {
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR,
+                    WebUtils.getMessage(referencedWarning.getKey(), referencedWarning.getParams().toArray()));
+        } else {
+            appointmentApiService.removeAppointment(id);
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("appointment.delete.success"));
+        }
+        return "redirect:/appointments";
+    }
+
 }

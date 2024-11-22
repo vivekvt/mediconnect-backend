@@ -4,7 +4,8 @@ public enum AppointmentStatus {
 
     UPCOMING("UPCOMING"),
     CANCELED("CANCELED"),
-    COMPLETED("COMPLETED");
+    COMPLETED("COMPLETED"),
+    REMOVED("REMOVED");
 
 
     AppointmentStatus(String status) {

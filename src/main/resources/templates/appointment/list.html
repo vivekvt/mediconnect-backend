@@ -30,6 +30,10 @@
                             <td>[[${appointment.bookTime}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
+                                    <form th:action="@{/appointments/remove/{id}(id=${appointment.id})}"
+                                          th:hx-confirm="#{remove.confirm}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-secondary">[[#{appointment.list.remove}]]</button>
+                                    </form>
                                     <form th:action="@{/appointments/delete/{id}(id=${appointment.id})}"
                                             th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
                                         <button type="submit" class="btn btn-sm btn-secondary">[[#{appointment.list.delete}]]</button>

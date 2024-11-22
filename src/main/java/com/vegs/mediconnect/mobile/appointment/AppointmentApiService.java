@@ -57,8 +57,13 @@ public class AppointmentApiService {
         return appointmentRepository.findAllByPatient(patient)
                 .stream()
                 .sorted(Comparator.comparing(Appointment::getDateTime))
+                .filter(this::notRemoved)
                 .map(this::mapToAppointmentResponse)
                 .toList();
+    }
+
+    private boolean notRemoved(Appointment appointment) {
+        return !AppointmentStatus.REMOVED.getStatus().equals(appointment.getStatus());
     }
 
     @Transactional
@@ -67,9 +72,24 @@ public class AppointmentApiService {
                 .ifPresentOrElse(this::cancelAppointment, AppointmentNotFoundException::new);
     }
 
+    @Transactional
+    public void removeAppointment(UUID appointmentId) {
+        appointmentRepository.findById(appointmentId)
+                .ifPresentOrElse(this::removeAppointment, AppointmentNotFoundException::new);
+    }
+
     private void cancelAppointment(Appointment appointment) {
         appointment.setCanceled(Boolean.TRUE);
         appointment.setStatus(AppointmentStatus.CANCELED.getStatus());
+        appointmentRepository.save(appointment);
+        var schedule = appointment.getScheduleTime();
+        schedule.setAvailable(true);
+        scheduleTimeRepository.save(schedule);
+    }
+
+    private void removeAppointment(Appointment appointment) {
+        appointment.setCanceled(Boolean.TRUE);
+        appointment.setStatus(AppointmentStatus.REMOVED.getStatus());
         appointmentRepository.save(appointment);
         var schedule = appointment.getScheduleTime();
         schedule.setAvailable(true);
