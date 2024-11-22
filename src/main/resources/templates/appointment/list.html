@@ -17,26 +17,19 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead>
                         <tr>
-                            <th scope="col">[[#{appointment.id.label}]]</th>
-                            <th scope="col">[[#{appointment.status.label}]]</th>
-                            <th scope="col">[[#{appointment.available.label}]]</th>
                             <th scope="col">[[#{appointment.patientId.label}]]</th>
                             <th scope="col">[[#{appointment.doctorId.label}]]</th>
-                            <th scope="col">[[#{appointment.scheduleTimeId.label}]]</th>
+                            <th scope="col">[[#{appointment.bookName.label}]]</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="appointment : ${appointments}">
-                            <td>[[${appointment.id}]]</td>
-                            <td>[[${appointment.status}]]</td>
-                            <td>[[${appointment.available}]]</td>
-                            <td>[[${appointment.patientId}]]</td>
-                            <td>[[${appointment.doctorId}]]</td>
-                            <td>[[${appointment.scheduleTimeId}]]</td>
+                            <td>[[${appointment.patientName}]]</td>
+                            <td>[[${appointment.doctorName}]]</td>
+                            <td>[[${appointment.bookTime}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
-                                    <a th:href="@{/appointments/edit/{id}(id=${appointment.id})}" class="btn btn-sm btn-secondary">[[#{appointment.list.edit}]]</a>
                                     <form th:action="@{/appointments/delete/{id}(id=${appointment.id})}"
                                             th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
                                         <button type="submit" class="btn btn-sm btn-secondary">[[#{appointment.list.delete}]]</button>

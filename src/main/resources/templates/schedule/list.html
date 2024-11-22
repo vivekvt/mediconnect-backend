@@ -28,7 +28,6 @@
                             <td>[[${schedule.date}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
-<!--                                    <a th:href="@{/schedules/edit/{id}(id=${schedule.id})}" class="btn btn-sm btn-secondary">[[#{schedule.list.edit}]]</a>-->
                                     <form th:action="@{/schedules/delete/{id}(id=${schedule.id})}"
                                             th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
                                         <button type="submit" class="btn btn-sm btn-secondary">[[#{schedule.list.delete}]]</button>

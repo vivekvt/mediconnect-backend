@@ -14,11 +14,9 @@
             </div>
             <div th:replace="~{fragments/forms::globalErrors('appointment')}" />
             <form th:action="${requestUri}" method="post">
-                <div th:replace="~{fragments/forms::inputRow(object='appointment', field='status')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='appointment', field='available', type='checkbox')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='appointment', field='patientId', required=true, type='select')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='appointment', field='scheduleTime', inputClass='js-datetimepicker', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='appointment', field='doctorId', required=true, type='select')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='appointment', field='scheduleId', required=true, type='select')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='appointment', field='patientId', required=true, type='select')}" />
                 <input type="submit" th:value="#{appointment.add.headline}" class="btn btn-primary mt-4" />
             </form>
         </div>

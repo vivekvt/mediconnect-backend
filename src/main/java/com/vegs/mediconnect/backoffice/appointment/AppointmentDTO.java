@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 
@@ -17,8 +18,7 @@ public class AppointmentDTO {
     @Size(max = 255)
     private String status;
 
-    @NotNull
-    private Boolean available;
+    private Boolean cancelled;
 
     @NotNull
     private UUID patientId;
@@ -26,7 +26,17 @@ public class AppointmentDTO {
     @NotNull
     private UUID doctorId;
 
-    @NotNull
     private UUID scheduleTimeId;
+
+    @NotNull
+    private LocalDateTime scheduleTime;
+
+    private String patientName;
+    private String doctorName;
+    private String bookTime;
+
+    public boolean isAvailable() {
+        return cancelled == null || cancelled.equals(Boolean.FALSE);
+    }
 
 }

@@ -7,18 +7,18 @@ import com.vegs.mediconnect.datasource.doctor.Doctor;
 import com.vegs.mediconnect.datasource.doctor.DoctorRepository;
 import com.vegs.mediconnect.datasource.patient.Patient;
 import com.vegs.mediconnect.datasource.patient.PatientRepository;
-import com.vegs.mediconnect.datasource.schedule.Schedule;
-import com.vegs.mediconnect.datasource.schedule.ScheduleRepository;
+import com.vegs.mediconnect.mobile.appointment.AppointmentApiService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 
@@ -30,11 +30,10 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
-    private final ScheduleRepository scheduleRepository;
+    private final AppointmentApiService appointmentApiService;
 
     @ModelAttribute
     public void prepareContext(final Model model) {
-        var dataFormat = DateTimeFormatter.ofPattern("EEE, d MMM");
         model.addAttribute("patientIdValues", patientRepository.findAll(
                 Sort.by("lastName", "firstName"))
                 .stream()
@@ -43,16 +42,14 @@ public class AppointmentController {
                 Sort.by("lastName", "firstName"))
                 .stream()
                 .collect(CustomCollectors.toSortedMap(Doctor::getId, Doctor::getFullName)));
-        model.addAttribute("scheduleTimeIdValues", scheduleRepository.findAll( // TODO Review me! refatorar-me
-                Sort.by("date"))
-                .stream()
-                .collect(CustomCollectors.toSortedMap(Schedule::getId,
-                        schedule -> schedule.getDate().format(dataFormat))));
     }
 
     @GetMapping
     public String list(final Model model) {
-        model.addAttribute("appointments", appointmentService.findAll());
+        model.addAttribute("appointments", appointmentService.findAllBook()
+                .stream()
+                .filter(AppointmentDTO::isAvailable)
+                .toList());
         return "appointment/list";
     }
 
@@ -67,26 +64,16 @@ public class AppointmentController {
         if (bindingResult.hasErrors()) {
             return "appointment/add";
         }
-        appointmentService.create(appointmentDTO);
-        redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("appointment.create.success"));
-        return "redirect:/appointments";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable(name = "id") final UUID id, final Model model) {
-        model.addAttribute("appointment", appointmentService.get(id));
-        return "appointment/edit";
-    }
-
-    @PostMapping("/edit/{id}")
-    public String edit(@PathVariable(name = "id") final UUID id,
-            @ModelAttribute("appointment") @Valid final AppointmentDTO appointmentDTO,
-            final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "appointment/edit";
+        try {
+            appointmentService.book(appointmentDTO);
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("appointment.create.success"));
+        } catch (ScheduleTimeUnavailable e) {
+            bindingResult.addError(new FieldError("appointment", "scheduleTime", "This schedule time already in use"));
+            return "appointment/add";
+        } catch (Exception e) {
+            bindingResult.addError(new FieldError("appointment", "scheduleTime", "Error to create appointment"));
+            return "appointment/add";
         }
-        appointmentService.update(id, appointmentDTO);
-        redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("appointment.update.success"));
         return "redirect:/appointments";
     }
 
@@ -98,7 +85,7 @@ public class AppointmentController {
             redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR,
                     WebUtils.getMessage(referencedWarning.getKey(), referencedWarning.getParams().toArray()));
         } else {
-            appointmentService.delete(id);
+            appointmentApiService.cancelAppointment(id);
             redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("appointment.delete.success"));
         }
         return "redirect:/appointments";

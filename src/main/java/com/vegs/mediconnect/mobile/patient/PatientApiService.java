@@ -38,7 +38,6 @@ public class PatientApiService {
     }
 
     private void mapToEntity(PatientDetailResponse patientDetailResponse, Patient patient) {
-        patient.setId(patientDetailResponse.getId());
         patient.setEmail(patientDetailResponse.getEmail());
         patient.setClinicCode(patientDetailResponse.getClinicCode());
         patient.setFirstName(patientDetailResponse.getFirstName());
