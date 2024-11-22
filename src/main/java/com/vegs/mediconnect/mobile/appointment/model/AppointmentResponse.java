@@ -16,6 +16,7 @@ public class AppointmentResponse {
     private String status;
     private String date;
     private String time;
+    private boolean isReviewed;
     private DoctorSimpleResponse doctor;
 
 }

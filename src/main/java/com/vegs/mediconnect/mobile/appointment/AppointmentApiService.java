@@ -5,6 +5,7 @@ import com.vegs.mediconnect.datasource.appointment.AppointmentRepository;
 import com.vegs.mediconnect.datasource.doctor.Doctor;
 import com.vegs.mediconnect.datasource.patient.Patient;
 import com.vegs.mediconnect.datasource.patient.PatientRepository;
+import com.vegs.mediconnect.datasource.review.ReviewRepository;
 import com.vegs.mediconnect.datasource.schedule.ScheduleTime;
 import com.vegs.mediconnect.datasource.schedule.ScheduleTimeRepository;
 import com.vegs.mediconnect.mobile.appointment.model.AppointmentRequest;
@@ -31,6 +32,7 @@ public class AppointmentApiService {
     private final PatientRepository patientRepository;
     private final ScheduleTimeRepository scheduleTimeRepository;
     private final DoctorApiService doctorApiService;
+    private final ReviewRepository reviewRepository;
 
     @Transactional
     public AppointmentResponse create(AppointmentRequest appointmentRequest) {
@@ -83,12 +85,22 @@ public class AppointmentApiService {
         var schedule = scheduleTime.getSchedule();
         var dataFormat = DateTimeFormatter.ofPattern("EEE, d MMM");
         var timeFormat = DateTimeFormatter.ofPattern("h a");
+
+        var status = getStatus(appointment);
+        boolean isReviewed = false;
+        if (AppointmentStatus.COMPLETED.getStatus().equals(status)) {
+            isReviewed = reviewRepository
+                    .findByAppointment(appointment)
+                    .isPresent();
+        }
+
         return AppointmentResponse
                 .builder()
                 .id(appointment.getId())
                 .date(schedule.getDate().format(dataFormat))
                 .time(scheduleTime.getTime().format(timeFormat))
-                .status(getStatus(appointment))
+                .isReviewed(isReviewed)
+                .status(status)
                 .doctor(doctorApiService.mapToDoctorSimpleResponse(doctor))
                 .build();
     }
