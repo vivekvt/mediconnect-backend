@@ -16,16 +16,7 @@
             <form th:action="${requestUri}" method="post">
                 <div th:replace="~{fragments/forms::inputRow(object='schedule', field='doctorId', required=true, type='select')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='schedule', field='date', inputClass='js-datepicker', required=true)}" />
-                <div class="row mb-3">
-                    <label for="times" class="col-md-2 col-form-label">
-                        <span>[[#{schedule.times.label}]]*</span>
-                    </label>
-                    <div class="col-md-10">
-                        <select th:field="*{schedule.times}" class="form-select" id="times" name="times" multiple>
-                            <option th:each="option : ${optionTimes}" th:value="${option}" th:text="${option}"></option>
-                        </select>
-                    </div>
-                </div>
+                <div th:replace="~{fragments/forms::inputRow(object='schedule', field='times', required=true, type='multiselect')}" />
 
                 <input type="submit" th:value="#{schedule.add.headline}" class="btn btn-primary mt-4" />
             </form>

@@ -42,7 +42,7 @@ public class ScheduleController {
         var allDoctors = doctorRepository.findAll(Sort.by("lastName", "firstName"));
 
         List<String> times = createAllTimes();
-        model.addAttribute("optionTimes", times);
+        model.addAttribute("timesValues", times);
         model.addAttribute("doctorIdValues", allDoctors
                 .stream()
                 .collect(CustomCollectors.toSortedMap(Doctor::getId, Doctor::getFullName)));
@@ -78,6 +78,7 @@ public class ScheduleController {
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             checkUniqueConstraint(bindingResult);
+            scheduleDTO.getTimes().clear();
             return "schedule/add";
         }
         var schedule = scheduleService.create(scheduleDTO);
@@ -97,13 +98,6 @@ public class ScheduleController {
         if (bindingResult.hasFieldErrors("doctorDate")) {
             bindingResult.addError(new FieldError("schedule", "date",
                     Optional.ofNullable(bindingResult.getFieldError("doctorDate"))
-                            .map(FieldError::getDefaultMessage)
-                            .orElse("Error")));
-        }
-
-        if (bindingResult.hasFieldErrors("scheduleDateTime")) {
-            bindingResult.addError(new FieldError("scheduleTime", "time",
-                    Optional.ofNullable(bindingResult.getFieldError("scheduleDateTime"))
                             .map(FieldError::getDefaultMessage)
                             .orElse("Error")));
         }
