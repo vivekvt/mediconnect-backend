@@ -30,6 +30,7 @@ public class NotificationApiService {
                         .id(notificationPatient.getId())
                         .title(notificationPatient.getNotificationId().getTitle())
                         .message(notificationPatient.getNotificationId().getMessage())
+                        .creationDate(notificationPatient.getDateCreated().toLocalDateTime())
                         .build())
                 .toList();
     }
