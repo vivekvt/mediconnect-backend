@@ -19,6 +19,7 @@
                         <tr>
                             <th scope="col">[[#{appointment.patientId.label}]]</th>
                             <th scope="col">[[#{appointment.doctorId.label}]]</th>
+                            <th scope="col">[[#{appointment.available.label}]]</th>
                             <th scope="col">[[#{appointment.bookName.label}]]</th>
                             <th><!-- --></th>
                         </tr>
@@ -27,6 +28,7 @@
                         <tr th:each="appointment : ${appointments}">
                             <td>[[${appointment.patientName}]]</td>
                             <td>[[${appointment.doctorName}]]</td>
+                            <td>[[${appointment.cancelled}]]</td>
                             <td>[[${appointment.bookTime}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">

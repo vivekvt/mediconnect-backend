@@ -19,6 +19,7 @@ public class AppointmentDTO {
     private String status;
 
     private Boolean cancelled;
+    private boolean removed;
 
     @NotNull
     private UUID patientId;
@@ -35,8 +36,8 @@ public class AppointmentDTO {
     private String doctorName;
     private String bookTime;
 
-    public boolean isAvailable() {
-        return cancelled == null || cancelled.equals(Boolean.FALSE);
+    public boolean notRemoved() {
+        return !removed;
     }
 
 }

@@ -48,7 +48,7 @@ public class AppointmentController {
     public String list(final Model model) {
         model.addAttribute("appointments", appointmentService.findAllBook()
                 .stream()
-                .filter(AppointmentDTO::isAvailable)
+                .filter(AppointmentDTO::notRemoved)
                 .toList());
         return "appointment/list";
     }
@@ -100,7 +100,7 @@ public class AppointmentController {
                     WebUtils.getMessage(referencedWarning.getKey(), referencedWarning.getParams().toArray()));
         } else {
             appointmentApiService.removeAppointment(id);
-            redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("appointment.delete.success"));
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("appointment.remove.success"));
         }
         return "redirect:/appointments";
     }

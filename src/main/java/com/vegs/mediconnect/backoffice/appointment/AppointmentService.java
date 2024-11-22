@@ -84,6 +84,7 @@ public class AppointmentService {
         appointmentDTO.setDoctorId(appointment.getDoctor().getId());
         appointmentDTO.setScheduleTimeId(appointment.getScheduleTime().getId());
         appointmentDTO.setCancelled(appointment.getCanceled());
+        appointmentDTO.setRemoved(AppointmentStatus.REMOVED.getStatus().equals(appointment.getStatus()));
 
         appointmentDTO.setPatientName(appointment.getPatient().getFullName());
         appointmentDTO.setDoctorName(appointment.getDoctor().getFullName());
