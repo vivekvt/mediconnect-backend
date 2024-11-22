@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { AddressSchema, IAddress } from './addressModel';
 
 export interface IPatient extends Document {
   userId: number;
@@ -6,7 +7,7 @@ export interface IPatient extends Document {
   lastName: string;
   email: string;
   phone: string;
-  address: string;
+  address: IAddress['_id'];
   image?: string;
   governmentIdNumber: string;
   governmentIdFile: string;
@@ -45,7 +46,7 @@ const PatientSchema = new Schema<IPatient>(
       },
     },
     address: {
-      type: String,
+      type: AddressSchema,
       // required: true,
     },
     image: {

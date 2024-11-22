@@ -15,6 +15,8 @@ export interface IAppointment extends Document {
   paymentStatus: 'pending' | 'completed' | 'failed' | 'refunded';
   meetingLink?: string;
   reports?: string;
+  virtualCheckIn?: any;
+  preAppointmentForm?: any;
 }
 
 const AppointmentSchema = new Schema<IAppointment>(
@@ -55,6 +57,14 @@ const AppointmentSchema = new Schema<IAppointment>(
     },
     meetingLink: String,
     reports: String,
+    virtualCheckIn: {
+      type: Object,
+      default: {},
+    },
+    preAppointmentForm: {
+      type: Object,
+      default: {},
+    },
   },
   {
     timestamps: true,

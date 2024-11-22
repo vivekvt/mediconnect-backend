@@ -21,7 +21,7 @@ export const getPatientProfile = async (req: AuthRequest, res: Response) => {
 export const updatePatientProfile = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?.userId;
-    console.log({ user: req.user });
+
     const {
       firstName,
       lastName,

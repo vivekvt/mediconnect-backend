@@ -13,7 +13,7 @@ const patientProfileValidation = [
   body('phone')
     .optional()
     .matches(/^\+?[\d\s-]{10,}$/),
-  body('address').optional().trim().notEmpty(),
+  body('address').optional().notEmpty(),
   body('gender').optional().isIn(['male', 'female', 'other']),
   body('dateOfBirth').optional().isISO8601(),
 ];
